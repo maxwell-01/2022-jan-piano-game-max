@@ -1,17 +1,19 @@
+:root {
+
+}
+
 .game-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    border: black 1px solid;
 }
 
 .piano-key-container {
     display: flex;
-    /*width: 100%;*/
     border: black 1px solid;
     height: 300px;
-    padding: 20px;
+    padding: 50px;
 }
 
 .piano-key {
@@ -19,15 +21,21 @@
     flex-direction: column;
     flex-grow: 1;
     border: black 1px solid;
+    align-items: center;
+    justify-content: flex-end;
 }
 .white-key {
     background-color: antiquewhite;
+
 }
 .black-key {
     background-color: black;
     color: #ffffff;
-    width: 30%;
-    left: 85%;
+    width: 40%;
+    left: 50%;
     position: relative;
+}
+
+.piano-key p {
 
 }

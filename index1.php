@@ -25,7 +25,7 @@
                       <div class="piano-key black-key" data-note="g0#">
                           <p>Q</p>
                       </div>
-                      <p>Caps Lock</p>
+                      <p>⇪</p>
                   </div>
                   <div class="piano-key white-key" data-note="a1">
                       <div class="piano-key black-key" data-note="a1#">
