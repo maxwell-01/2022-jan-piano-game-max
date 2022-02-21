@@ -1,0 +1,33 @@
+.game-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    border: black 1px solid;
+}
+
+.piano-key-container {
+    display: flex;
+    /*width: 100%;*/
+    border: black 1px solid;
+    height: 300px;
+    padding: 20px;
+}
+
+.piano-key {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border: black 1px solid;
+}
+.white-key {
+    background-color: antiquewhite;
+}
+.black-key {
+    background-color: black;
+    color: #ffffff;
+    width: 30%;
+    left: 85%;
+    position: relative;
+
+}
