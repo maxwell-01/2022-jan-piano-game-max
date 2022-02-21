@@ -67,7 +67,7 @@
                 </div>
                 <div class="piano-key white-key" data-note="c2">
                     <div class="piano-key black-key" data-note="c2#">
-                        <p>[Q]</p>
+                        <p>[</p>
                     </div>
                     <p>;</p>
                 </div>
