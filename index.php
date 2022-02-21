@@ -12,5 +12,9 @@
 
 <body>
 
+<section class="game-container">
+
+</section>
+
 </body>
 </html>
