@@ -13,7 +13,6 @@ let keyBoardArray = [
             pressed: false
         }
     },
-
     {
         keyNote: 'a4',
         keyCode: 'KeyS',
@@ -26,7 +25,6 @@ let keyBoardArray = [
             pressed: false
         }
     },
-
     {
         keyNote: 'b4',
         keyCode: 'KeyD',
@@ -87,7 +85,6 @@ let keyBoardArray = [
             pressed: false
         }
     },
-
     {
         keyNote: 'g4',
         keyCode: 'KeyK',
@@ -100,7 +97,6 @@ let keyBoardArray = [
             pressed: false
         }
     },
-
     {
         keyNote: 'a5',
         keyCode: 'KeyL',
@@ -113,7 +109,6 @@ let keyBoardArray = [
             pressed: false
         }
     },
-
     {
         keyNote: 'b5',
         keyCode: 'Semicolon',
@@ -162,8 +157,8 @@ let keyBoardArray = [
             pressed: false
         }
     }
-
 ]
+
 keyBoardArray.forEach((key) => {
     if(key.blackKey.keyNote !== null) {
         pianoKeys.innerHTML +=
@@ -182,7 +177,6 @@ keyBoardArray.forEach((key) => {
 })
 
 window.addEventListener('keydown' , (event) => {
-
     keyBoardArray.forEach((key) => {
         if(key.keyCode === event.code) {
             if(key.pressed !== true) {
@@ -199,7 +193,6 @@ window.addEventListener('keydown' , (event) => {
 })
 
 window.addEventListener('keyup' , (event) => {
-
     keyBoardArray.forEach((key) => {
         if(key.keyCode === event.code) {
             console.log(key.keyNote)
