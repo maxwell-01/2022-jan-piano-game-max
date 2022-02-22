@@ -1,3 +1,11 @@
+:root {
+    --plonk-dark-green: #0c5424;
+    --plonk-light-green: #245739;
+    --plonk-dark-pink: #f09894;
+    --plonk-medium-pink: #fab7ae;
+    --plonk-light-pink: #fcd3ce;
+}
+
 .modal-blurred-area {
     display: block;
     position: fixed;
@@ -50,4 +58,38 @@ h2 {
 
 .remove-bullet-point {
     list-style-type: none;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+.piano-key-container {
+    display: flex;
+    border: black 1px solid;
+    height: 300px;
+    padding: 50px;
+}
+
+.piano-key {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border: black 1px solid;
+    align-items: center;
+    justify-content: flex-end;
+}
+.white-key {
+    background-color: var(--plonk-light-pink);
+}
+
+.black-key {
+    background-color: var(--plonk-dark-green);
+    color: #ffffff;
+    width: 40%;
+    left: 50%;
+    position: relative;
 }
