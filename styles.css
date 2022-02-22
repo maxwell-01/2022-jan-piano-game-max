@@ -4,7 +4,6 @@
     --plonk-dark-pink: #f09894;
     --plonk-medium-pink: #fab7ae;
     --plonk-light-pink: #fcd3ce;
-
 }
 
 .game-container {
@@ -31,16 +30,12 @@
 }
 .white-key {
     background-color: var(--plonk-light-pink);
-
 }
+
 .black-key {
     background-color: var(--plonk-dark-green);
     color: #ffffff;
     width: 40%;
     left: 50%;
     position: relative;
-}
-
-.piano-key p {
-
 }
