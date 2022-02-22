@@ -49,12 +49,12 @@
                       <p>F</p>
                   </div>
                   <div class="piano-key white-key" data-note="e1">
-                      <div class="piano-key black-key" data-note="e1#">
-                          <p>Y</p>
-                      </div>
                       <p>G</p>
                   </div>
                   <div class="piano-key white-key" data-note="f1">
+                      <div class="piano-key black-key" data-note="f1#">
+                          <p>Y</p>
+                      </div>
                       <p>H</p>
                   </div>
                   <div class="piano-key white-key" data-note="g1">

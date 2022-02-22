@@ -1,4 +1,9 @@
 :root {
+    --plonk-dark-green: #0c5424;
+    --plonk-light-green: #245739;
+    --plonk-dark-pink: #f09894;
+    --plonk-medium-pink: #fab7ae;
+    --plonk-light-pink: #fcd3ce;
 
 }
 
@@ -25,11 +30,11 @@
     justify-content: flex-end;
 }
 .white-key {
-    background-color: antiquewhite;
+    background-color: var(--plonk-light-pink);
 
 }
 .black-key {
-    background-color: black;
+    background-color: var(--plonk-dark-green);
     color: #ffffff;
     width: 40%;
     left: 50%;
