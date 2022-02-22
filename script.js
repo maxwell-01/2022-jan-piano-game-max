@@ -1,13 +1,28 @@
-let showInstructionsModal = document.querySelector('.modal-greyed-area')
-let instructionsButton = document.querySelector('#instruction-button')
-let hideInstructionsModal = document.querySelectorAll('.modal-button')
+let blurredAreaModal = document.querySelector('.modal-blurred-area')
+let showInstructionsButton = document.querySelector('#instruction-button')
+let instructionsModal = document.querySelector('.instruction-modal')
+let instructionsBody = document.querySelector('.instructions-body')
+let hideInstructionsModal = document.querySelector('#modal-button')
 
-instructionsButton.addEventListener('click', (event) => {
+showInstructionsButton.addEventListener('click', (event) => {
     event.preventDefault()
-    showInstructionsModal.style.display = 'block'
+    event.stopPropagation()
+    blurredAreaModal.style.display = 'block'
+    instructionsModal.style.display = 'block'
 })
 
-hideInstructionsModal.addEventLsitener('click', (event) => {
+hideInstructionsModal.addEventListener('click', (event) => {
     event.preventDefault()
-    showInstructionsModal.style.display = 'none'
+    event.stopPropagation()
+    blurredAreaModal.style.display = 'none'
+    instructionsModal.style.display = 'none'
+})
+
+window.addEventListener('click', (event) => {
+    if (event.target === blurredAreaModal && instructionsModal) {
+        event.preventDefault()
+        event.stopPropagation()
+        blurredAreaModal.style.display = 'none'
+        instructionsModal.style.display = 'none'
+    }
 })
