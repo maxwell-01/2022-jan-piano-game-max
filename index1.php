@@ -23,7 +23,7 @@
       <div class="modal-blurred-area">
           <div class="instruction-modal">
               <h2>Instructions</h2>
-              <button id="modal-button">&#x2715</button>
+              <button id="modal-button">&#x2715;</button>
               <div class="instructions-body">
                   <p>Welcome to Piano Plinky Plonk, the interactive web-piano that allows you to play your own tunes!</p>
                   <p>To get started:</p>
@@ -42,7 +42,7 @@
 
     <section class="game-container">
         <div class="instruction-button-container">
-            <button id="instruction-button">&#8505</button>
+            <button id="instruction-button">&#8505;</button>
         </div>
              <div class="piano-key-container">
                   <div class="piano-key white-key" data-note="g0">
