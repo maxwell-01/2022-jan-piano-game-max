@@ -33,25 +33,6 @@
     box-shadow: 5px 5px 5px black;
 }
 
-
-/*.ModalOpen { */
-/*    overflow: hidden; */
-/*}*/
-
-/*.is-hidden { */
-/*    display: none; */
-/*}*/
-
-/*.is-visuallyHidden { */
-/*    opacity: 0; */
-/*}*/
-
-/* would like to blur background on modal open but may be a JS task
-/*.is-blurred {*/
-/*    filter: blur(2px);*/
-/*    -webkit-filter: blur(2px);*/
-/*}*/
-
 #modal-button {
     position: relative;
     left: 400px;
