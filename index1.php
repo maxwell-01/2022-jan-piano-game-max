@@ -20,7 +20,7 @@
           <h1>Piano Plinky Plonk</h1>
       </header>
   <main>
-      <div class="modal-blurred-area is-hidden is-visuallyHidden">
+      <div class="modal-blurred-area">
           <div class="instruction-modal">
               <h2>Instructions</h2>
               <button id="modal-button">&#x2715</button>
