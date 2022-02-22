@@ -7,37 +7,41 @@ let keyBoardArray = [
         keyCode: 'KeyA',
         label: 'A',
         pressed: false,
+        frequency: 195.9977,
         blackKey: {
             keyNote: 'g3#',
             keyCode: 'KeyW',
             label: 'W',
-            pressed: false
+            pressed: false,
+            frequency: 207.6523
         }
     },
-
     {
         keyNote: 'a4',
         keyCode: 'KeyS',
         label: 'S',
         pressed: false,
+        frequency: 220.0000,
         blackKey: {
             keyNote: 'a4#',
             keyCode: 'KeyE',
             label: 'E',
-            pressed: false
+            pressed: false,
+            frequency: 233.0819
         }
     },
-
     {
         keyNote: 'b4',
         keyCode: 'KeyD',
         label: 'D',
         pressed: false,
+        frequency: 246.9417,
         blackKey: {
             keyNote: null,
             keyCode: null,
             label: null,
-            pressed: false
+            pressed: false,
+            frequency: null
         }
     },
     {
@@ -45,11 +49,13 @@ let keyBoardArray = [
         keyCode: 'KeyF',
         label: 'F',
         pressed: false,
+        frequency: 261.6256,
         blackKey: {
             keyNote: 'c4#',
             keyCode: 'KeyT',
             label: 'T',
-            pressed: false
+            pressed: false,
+            frequency: 277.1826
         }
     },
     {
@@ -57,11 +63,13 @@ let keyBoardArray = [
         keyCode: 'KeyG',
         label: 'G',
         pressed: false,
+        frequency: 293.6648,
         blackKey: {
             keyNote: 'd4#',
             keyCode: 'KeyY',
             label: 'Y',
-            pressed: false
+            pressed: false,
+            frequency: 311.1270
         }
     },
     {
@@ -69,11 +77,13 @@ let keyBoardArray = [
         keyCode: 'KeyH',
         label: 'H',
         pressed: false,
+        frequency: 329.6276,
         blackKey: {
             keyNote: null,
             keyCode: null,
             label: null,
-            pressed: false
+            pressed: false,
+            frequency: null
         }
     },
     {
@@ -81,50 +91,55 @@ let keyBoardArray = [
         keyCode: 'KeyJ',
         label: 'J',
         pressed: false,
+        frequency: 349.2282,
         blackKey:     {
             keyNote: 'f4#',
             keyCode: 'KeyI',
             label: 'I',
-            pressed: false
+            pressed: false,
+            frequency: 369.9944
         }
     },
-
     {
         keyNote: 'g4',
         keyCode: 'KeyK',
         label: 'K',
         pressed: false,
+        frequency: 391.9954,
         blackKey: {
             keyNote: 'g4#',
             keyCode: 'KeyO',
             label: 'O',
-            pressed: false
+            pressed: false,
+            frequency: 415.3047
         }
     },
-
     {
         keyNote: 'a5',
         keyCode: 'KeyL',
         label: 'L',
         pressed: false,
+        frequency: 440.0000,
         blackKey: {
             keyNote: 'a5#',
             keyCode: 'KeyP',
             label: 'P',
-            pressed: false
+            pressed: false,
+            frequency: 466.1638
         }
     },
-
     {
         keyNote: 'b5',
         keyCode: 'Semicolon',
         label: ';',
         pressed: false,
+        frequency: 493.8833,
         blackKey: {
             keyNote: null,
             keyCode: null,
             label: null,
-            pressed: false
+            pressed: false,
+            frequency: null
         }
     },
     {
@@ -132,11 +147,13 @@ let keyBoardArray = [
         keyCode: 'Quote',
         label: "'",
         pressed: false,
+        frequency: 523.2511,
         blackKey: {
             keyNote: 'c5#',
             keyCode: 'BracketLeft',
             label: '[',
-            pressed: false
+            pressed: false,
+            frequency: 554.3653
         }
     },
     {
@@ -144,11 +161,13 @@ let keyBoardArray = [
         keyCode: 'Backslash',
         label: '\\',
         pressed: false,
+        frequency: 587.3295,
         blackKey: {
             keyNote: 'd5#',
             keyCode: 'BracketRight',
             label: ']',
-            pressed: false
+            pressed: false,
+            frequency: 622.2540
         }
     },
     {
@@ -156,15 +175,17 @@ let keyBoardArray = [
         keyCode: 'Enter',
         label: '⏎',
         pressed: false,
+        frequency: 659.2551,
         blackKey: {
             keyNote: null,
             keyCode: null,
             label: null,
-            pressed: false
+            pressed: false,
+            frequency: null
         }
     }
-
 ]
+
 keyBoardArray.forEach((key) => {
     if(key.blackKey.keyNote !== null) {
         pianoKeys.innerHTML +=
@@ -183,7 +204,6 @@ keyBoardArray.forEach((key) => {
 })
 
 window.addEventListener('keydown' , (event) => {
-
     keyBoardArray.forEach((key) => {
         if(key.keyCode === event.code) {
             if(key.pressed !== true) {
@@ -202,7 +222,6 @@ window.addEventListener('keydown' , (event) => {
 })
 
 window.addEventListener('keyup' , (event) => {
-
     keyBoardArray.forEach((key) => {
         if(key.keyCode === event.code) {
             console.log(key.keyNote)
