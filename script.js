@@ -1,3 +1,4 @@
+
 let pianoKeys = document.querySelector('.piano-key-container')
 
 let keyBoardArray = [
@@ -188,11 +189,13 @@ window.addEventListener('keydown' , (event) => {
             if(key.pressed !== true) {
                 console.log(key.keyNote)
                 key.pressed = true
+                playNote(key.frequency)
             }
         } else if(key.blackKey.keyCode === event.code) {
             if(key.blackKey.pressed !== true) {
                 console.log(key.blackKey.keyNote)
                 key.blackKey.pressed = true
+                playNote(key.blackKey.frequency)
             }
         }
     })
@@ -205,6 +208,7 @@ window.addEventListener('keyup' , (event) => {
             console.log(key.keyNote)
             if(key.pressed !== false) {
                 key.pressed = false
+                playNote(key.frequency)
             }
         } else if(key.blackKey.keyCode === event.code) {
             console.log(key.blackKey.keyNote)
@@ -214,3 +218,25 @@ window.addEventListener('keyup' , (event) => {
         }
     })
 })
+
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let notesPlaying = [];
+let audioConnect = null;
+
+audioConnect = audioContext.createGain();
+audioConnect.connect(audioContext.destination);
+
+function playNote(frequency) {
+    let osc = audioContext.createOscillator()
+    osc.connect(audioConnect)
+    osc.type = 'sine'
+    osc.frequency.value = frequency
+    osc.start()
+    return osc
+}
+
+function notePressed(note) {
+
+}
+
+// playNote(26100.6256)
