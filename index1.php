@@ -16,9 +16,10 @@
 
 <body>
 
-      <header><h1>Piano Plinky Plonk</h1></header>
+      <header>
+          <h1>Piano Plinky Plonk</h1>
+      </header>
   <main>
-
       <div class="modal-blurred-area is-hidden is-visuallyHidden">
           <div class="instruction-modal">
               <h2>Instructions</h2>
