@@ -11,7 +11,6 @@ body {
     font-size: 10px;
     padding: 20px;
     background-color: #000000;
-
 }
 
 header {
@@ -64,6 +63,7 @@ footer a:hover {
     overflow: auto;
     transition: all 0.3s linear;
 }
+
 .instruction-modal {
     background-color: #000000;
     position: relative;
@@ -161,6 +161,7 @@ h2 {
     font-size: 1rem;
     font-weight: bold;
 }
+
 .white-key {
     background-color: #ffffff;
 }
