@@ -1,0 +1,95 @@
+:root {
+    --plonk-dark-green: #0c5424;
+    --plonk-light-green: #245739;
+    --plonk-dark-pink: #f09894;
+    --plonk-medium-pink: #fab7ae;
+    --plonk-light-pink: #fcd3ce;
+}
+
+.modal-blurred-area {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    padding-top: 100px;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-transition: 0.5s;
+    overflow: auto;
+    transition: all 0.3s linear;
+}
+.instruction-modal {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    max-width: 450px;
+    height: 250px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px black;
+}
+
+/* left commented out until JS in place
+/*.ModalOpen { overflow: hidden; }*/
+/*.is-hidden { display: none; }*/
+/*.is-visuallyHidden { opacity: 0; }*/
+
+/* would like to blur background on modal open but may be a JS task
+/*.is-blurred {*/
+/*    filter: blur(2px);*/
+/*    -webkit-filter: blur(2px);*/
+/*}*/
+
+#modal-button {
+    position: relative;
+    left: 400px;
+    bottom: 30px;
+}
+
+h2 {
+    margin: 0;
+}
+
+.instruction-modal p {
+    margin: 0;
+}
+
+.remove-bullet-point {
+    list-style-type: none;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+.piano-key-container {
+    display: flex;
+    border: black 1px solid;
+    height: 300px;
+    padding: 50px;
+}
+
+.piano-key {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border: black 1px solid;
+    align-items: center;
+    justify-content: flex-end;
+}
+.white-key {
+    background-color: var(--plonk-light-pink);
+}
+
+.black-key {
+    background-color: var(--plonk-dark-green);
+    color: #ffffff;
+    width: 40%;
+    left: 50%;
+    position: relative;
+}
