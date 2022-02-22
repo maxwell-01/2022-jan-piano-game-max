@@ -1,6 +1,7 @@
-
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let notesPlaying = {};
+let audioConnect = null;
 let pianoKeys = document.querySelector('.piano-key-container')
-
 let keyBoardArray = [
     {
         keyNote: 'g3',
@@ -125,7 +126,7 @@ let keyBoardArray = [
             keyCode: 'KeyP',
             label: 'P',
             pressed: false,
-            frequency: 466.1638
+            frequency: 493.8833
         }
     },
     {
@@ -133,7 +134,7 @@ let keyBoardArray = [
         keyCode: 'Semicolon',
         label: ';',
         pressed: false,
-        frequency: 493.8833,
+        frequency: 466.1638,
         blackKey: {
             keyNote: null,
             keyCode: null,
@@ -203,59 +204,54 @@ keyBoardArray.forEach((key) => {
     }
 })
 
+audioConnect = audioContext.createGain();
+audioConnect.connect(audioContext.destination);
+
+function playNote(frequency) {
+    let sound = audioContext.createOscillator()
+    sound.connect(audioConnect)
+    sound.type = 'sine'
+    sound.frequency.value = frequency
+    sound.start()
+    return sound
+}
+
 window.addEventListener('keydown' , (event) => {
+    event.preventDefault()
+    event.stopPropagation()
     keyBoardArray.forEach((key) => {
         if(key.keyCode === event.code) {
             if(key.pressed !== true) {
-                console.log(key.keyNote)
                 key.pressed = true
-                playNote(key.frequency)
+                notesPlaying[key.keyNote] = playNote(key.frequency)
             }
         } else if(key.blackKey.keyCode === event.code) {
             if(key.blackKey.pressed !== true) {
-                console.log(key.blackKey.keyNote)
                 key.blackKey.pressed = true
-                playNote(key.blackKey.frequency)
+                notesPlaying[key.blackKey.keyNote] = playNote(key.blackKey.frequency)
             }
         }
     })
 })
 
 window.addEventListener('keyup' , (event) => {
+    event.preventDefault()
+    event.stopPropagation()
     keyBoardArray.forEach((key) => {
         if(key.keyCode === event.code) {
-            console.log(key.keyNote)
             if(key.pressed !== false) {
                 key.pressed = false
-                playNote(key.frequency)
+                notesPlaying[key.keyNote].stop()
             }
         } else if(key.blackKey.keyCode === event.code) {
-            console.log(key.blackKey.keyNote)
             if(key.blackKey.pressed !== false) {
                 key.blackKey.pressed = false
+                notesPlaying[key.blackKey.keyNote].stop()
             }
         }
     })
 })
 
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let notesPlaying = [];
-let audioConnect = null;
 
-audioConnect = audioContext.createGain();
-audioConnect.connect(audioContext.destination);
 
-function playNote(frequency) {
-    let osc = audioContext.createOscillator()
-    osc.connect(audioConnect)
-    osc.type = 'sine'
-    osc.frequency.value = frequency
-    osc.start()
-    return osc
-}
 
-function notePressed(note) {
-
-}
-
-// playNote(26100.6256)
