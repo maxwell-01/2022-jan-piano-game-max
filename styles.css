@@ -6,6 +6,49 @@
     --plonk-light-pink: #fcd3ce;
 }
 
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    padding: 20px;
+    background-color: #000000;
+
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-style: double;
+    margin-bottom: 20px;
+    background-color: #000000;
+    box-shadow: 5px 5px 5px #ff0099;
+    color: #ff0099;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    border-style: double;
+    background-color: #000000;
+    box-shadow: 5px 5px 5px #ff0099;
+    color: #ff0099;
+}
+
+footer a {
+    padding: 50px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff0099;
+    text-shadow: 4px 4px 4px #ff0099;
+}
+
+footer a:hover {
+    color: #ffffff;
+}
+
 .modal-blurred-area {
     display: block;
     position: fixed;
@@ -22,25 +65,30 @@
     transition: all 0.3s linear;
 }
 .instruction-modal {
-    background-color: #fefefe;
+    background-color: #000000;
+    position: relative;
+    top: 135px;
     margin: auto;
     padding: 20px;
     max-width: 450px;
     height: 250px;
+    color: #ffffff;
     border-radius: 10px;
-    box-shadow: 5px 5px 5px black;
+    font-size: 1rem;
+    box-shadow: 5px 5px 5px #ff0099;
 }
 
-/* left commented out until JS in place
-/*.ModalOpen { overflow: hidden; }*/
-/*.is-hidden { display: none; }*/
-/*.is-visuallyHidden { opacity: 0; }*/
+.ModalOpen {
+    overflow: hidden;
+}
 
-/* would like to blur background on modal open but may be a JS task
-/*.is-blurred {*/
-/*    filter: blur(2px);*/
-/*    -webkit-filter: blur(2px);*/
-/*}*/
+.is-hidden {
+    display: none;
+}
+
+.is-visuallyHidden {
+    opacity: 0;
+}
 
 #modal-button {
     position: relative;
@@ -60,18 +108,46 @@ h2 {
     list-style-type: none;
 }
 
+#instruction-button {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 2rem;
+    border-style: solid;
+    background-color: #ffffff;
+    margin: 10px;
+    text-align: center;
+    color: #ff0099;
+}
+
+#instruction-button:hover {
+    background-color: #ff0099;
+    color: #ffffff;
+}
+
+#instruction-button:active {
+    box-shadow: 0 5px #1DB8DF;
+    transform: translateY(4px);
+}
+
 .game-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
+    max-width: 100%;
+    margin-bottom: 30px;
+    border-style: double;
+    padding: 20px;
+    background-color: #000000;
+    box-shadow: 5px 5px 5px #ff0099;
+    color: #ff0099;
 }
 
 .piano-key-container {
     display: flex;
     border: black 1px solid;
     height: 300px;
-    padding: 50px;
+    padding: 20px;
 }
 
 .piano-key {
@@ -81,13 +157,17 @@ h2 {
     border: black 1px solid;
     align-items: center;
     justify-content: flex-end;
+    box-shadow: 5px 5px 5px #1DB8DF;
+    font-size: 1rem;
+    font-weight: bold;
 }
 .white-key {
-    background-color: var(--plonk-light-pink);
+    background-color: #ffffff;
 }
 
 .black-key {
-    background-color: var(--plonk-dark-green);
+    bottom: 5px;
+    background-color: #000000;
     color: #ffffff;
     width: 40%;
     left: 50%;
