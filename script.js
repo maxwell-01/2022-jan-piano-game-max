@@ -93,7 +93,7 @@ let keyBoardArray = [
         label: 'J',
         pressed: false,
         frequency: 349.2282,
-        blackKey:     {
+        blackKey: {
             keyNote: 'f4#',
             keyCode: 'KeyI',
             label: 'I',
