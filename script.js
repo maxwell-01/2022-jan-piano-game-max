@@ -1,11 +1,11 @@
 let showInstructionsButton = document.querySelector('#instruction-button')
 let hideInstructionsModal = document.querySelector('#modal-button')
 
-function openCloseModal(modalOverlay, modalBody, status) {
-    if(status === 'close') {
+function openCloseModal(modalOverlay, modalBody, isModalOpen) {
+    if(isModalOpen === false) {
         document.querySelector(modalOverlay).style.display = 'none'
         document.querySelector(modalBody).style.display = 'none'
-    } else if(status === 'open') {
+    } else if(isModalOpen === true) {
         document.querySelector(modalOverlay).style.display = 'block'
         document.querySelector(modalBody).style.display = 'block'
     }
@@ -13,11 +13,11 @@ function openCloseModal(modalOverlay, modalBody, status) {
 
 showInstructionsButton.addEventListener('click', (event) => {
     event.stopPropagation()
-    openCloseModal('.modal-blurred-area', '.instruction-modal', 'open')
+    openCloseModal('.modal-blurred-area', '.instruction-modal', true)
 })
 
 hideInstructionsModal.addEventListener('click', () => {
-    openCloseModal('.modal-blurred-area', '.instruction-modal', 'close')
+    openCloseModal('.modal-blurred-area', '.instruction-modal', false)
 })
 
 let instructionsModal = document.querySelector('.instruction-modal')
@@ -25,7 +25,7 @@ let blurredAreaModal = document.querySelector('.modal-blurred-area')
 window.addEventListener('click', (event) => {
     if (event.target === blurredAreaModal && instructionsModal) {
         event.stopPropagation()
-        openCloseModal('.modal-blurred-area', '.instruction-modal', 'close')
+        openCloseModal('.modal-blurred-area', '.instruction-modal', false)
     }
 })
 
