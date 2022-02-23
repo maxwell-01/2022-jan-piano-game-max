@@ -160,6 +160,12 @@ h2 {
     font-size: 1rem;
     font-weight: bold;
 }
+.piano-key div {
+    order: 1;
+}
+.piano-key p {
+    order: 2;
+}
 
 .white-key {
     background-color: #ffffff;
