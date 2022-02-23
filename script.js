@@ -11,10 +11,10 @@ function openCloseModal(modalOverlay, modalBody, status) {
         document.querySelector(modalBody).style.display = 'block'
     }
 }
-
 hideGameStartModal.addEventListener('click', (event) => {
     event.stopPropagation()
     openCloseModal('.modal-overlay-start', '.start-game-modal', 'close')
+    play()
 })
 
 showInstructionsButton.addEventListener('click', (event) => {
@@ -35,10 +35,6 @@ window.addEventListener('click', (event) => {
     }
 })
 
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let notesPlaying = {};
-let audioConnect = null;
-let pianoKeys = document.querySelector('.piano-key-container')
 let keyBoardArray = [
     {
         keyColour: 'white',
@@ -211,7 +207,7 @@ let keyBoardArray = [
     {
         keyColour: 'black',
         parentKey: 'd5',
-        keyNote: 'd5#',
+        keyNote: 'd5sharp',
         keyCode: 'BracketRight',
         label: ']',
         pressed: false,
@@ -244,7 +240,7 @@ let popcornSongNotes = [
         duration: 500
     },
     {
-        keyNote: 'f4Sharp',
+        keyNote: 'f4sharp',
         notePlayedAt: 3500,
         duration: 500
     },
@@ -254,7 +250,7 @@ let popcornSongNotes = [
         duration: 500
     },
     {
-        keyNote: 'f4Sharp',
+        keyNote: 'f4sharp',
         notePlayedAt: 4500,
         duration: 500
     },
@@ -279,7 +275,7 @@ let popcornSongNotes = [
         duration: 500
     },
     {
-        keyNote: 'f4Sharp',
+        keyNote: 'f4sharp',
         notePlayedAt: 7500,
         duration: 500
     },
@@ -289,7 +285,7 @@ let popcornSongNotes = [
         duration: 500
     },
     {
-        keyNote: 'f4Sharp',
+        keyNote: 'f4sharp',
         notePlayedAt: 8500,
         duration: 500
     },
@@ -304,7 +300,7 @@ let popcornSongNotes = [
         duration: 500
     },
     {
-        keyNote: 'c4Sharp',
+        keyNote: 'c4sharp',
         notePlayedAt: 10500,
         duration: 500
     },
@@ -314,7 +310,7 @@ let popcornSongNotes = [
         duration: 500
     },
     {
-        keyNote: 'c4Sharp',
+        keyNote: 'c4sharp',
         notePlayedAt: 11500,
         duration: 500
     },
@@ -329,7 +325,7 @@ let popcornSongNotes = [
         duration: 500
     },
     {
-        keyNote: 'c4Sharp',
+        keyNote: 'c4sharp',
         notePlayedAt: 13000,
         duration: 500
     },
@@ -339,7 +335,7 @@ let popcornSongNotes = [
         duration: 500
     },
     {
-        keyNote: 'c4Sharp',
+        keyNote: 'c4sharp',
         notePlayedAt: 14000,
         duration: 500
     },
@@ -375,65 +371,111 @@ let popcornSongNotes = [
     },
 ]
 
-keyBoardArray.forEach((key) => {
-    if(key.keyColour === 'white') {
-        pianoKeys.innerHTML +=
-        '<div id="' + key.keyNote + '" class="piano-key white-key" data-id="' + key.keyNote + '">\n' +
-        '<p>' + key.label + '</p>\n' +
-        '</div>'
-    }
-})
 
-keyBoardArray.forEach((key) => {
-    if(key.keyColour === 'black') {
-        let parentWhiteKey = document.querySelector('#' + key.parentKey )
-        parentWhiteKey.innerHTML +=
-            '<div id="' + key.keyNote + '" class="piano-key black-key" data-note="' + key.keyNote + '">\n' +
-            '   <p>' + key.label + '</p>\n' +
-            '</div>\n'
-    }
-})
-
-audioConnect = audioContext.createGain();
-audioConnect.connect(audioContext.destination);
-
-function playNote(frequency) {
-    let sound = audioContext.createOscillator()
-    sound.connect(audioConnect)
-    sound.type = 'sine'
-    sound.frequency.value = frequency
-    sound.start()
-    return sound
+function createGameScreen() {
+    let pianoKeys = document.querySelector('.piano-key-container')
+    let gameNotesContainer = document.querySelector('.game-notes-container')
+    keyBoardArray.forEach((key) => {
+        if(key.keyColour === 'white') {
+            pianoKeys.innerHTML +=
+                '<div id="' + key.keyNote + '" class="piano-key white-key" data-id="' + key.keyNote + '">\n' +
+                '   <p>' + key.label + '</p>\n' +
+                '</div>'
+            gameNotesContainer.innerHTML +=
+                '<div class="piano-key-channel white-key-channel" data-channel="' + key.keyNote + '">\n' +
+                '</div>'
+        } else if(key.keyColour === 'black') {
+            let parentWhiteKey = document.querySelector('#' + key.parentKey)
+            parentWhiteKey.innerHTML +=
+                '<div id="' + key.keyNote + '" class="piano-key black-key" data-note="' + key.keyNote + '">\n' +
+                '   <p>' + key.label + '</p>\n' +
+                '</div>\n'
+            let parentWhiteChannel = document.querySelector('[data-channel="' + key.parentKey + '"]')
+            parentWhiteChannel.innerHTML +=
+                '<div class="piano-key-channel black-key-channel" data-channel="' + key.keyNote + '">\n' +
+                '</div>'
+        }
+    })
 }
 
-window.addEventListener('keydown' , (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-    keyBoardArray.forEach((key) => {
-        if(key.keyCode === event.code) {
-            if(key.pressed !== true) {
-                key.pressed = true
-                notesPlaying[key.keyNote] = playNote(key.frequency)
-                let noteClass = '#' + key.keyNote
-                let pianoKeyDiv = document.querySelector(noteClass)
-                pianoKeyDiv.classList.add('depressedKey')
-            }
-        }
-    })
-})
+function createNoteInChannel(noteObject) {
+    let channel = document.querySelector('[data-channel="' + noteObject.keyNote + '"]')
+    channel.innerHTML += '<div class="target-note" data-floating-note="' + noteObject.keyNote + '"></div>'
+    let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
+    if(noteObject.keyColour === 'white') {
+        noteDiv.classList.add('white-note-target')
+    } else if (noteObject.keyColour === 'black') {
+        noteDiv.classList.add('black-note-target')
+    }
+}
 
-window.addEventListener('keyup' , (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-    keyBoardArray.forEach((key) => {
-        if(key.keyCode === event.code) {
-            if(key.pressed !== false) {
-                key.pressed = false
-                notesPlaying[key.keyNote].stop()
-                let noteClass = '#' + key.keyNote
-                let pianoKeyDiv = document.querySelector(noteClass)
-                pianoKeyDiv.classList.remove('depressedKey')
-            }
-        }
+function loadSong(song) {
+    song.forEach((noteTarget) => {
+        let noteObject =  keyBoardArray.find(object => object.keyNote === noteTarget.keyNote)
+        setTimeout(() => {
+            createNoteInChannel(noteObject)
+            let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
+            setTimeout(() => {
+                noteDiv.remove()
+            }, noteTarget.duration)
+        }, noteTarget.notePlayedAt)
     })
-})
+}
+
+function play() {
+
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let notesPlaying = {};
+    let audioConnect = null;
+
+    audioConnect = audioContext.createGain();
+    audioConnect.connect(audioContext.destination);
+
+    function playNote(frequency) {
+        let sound = audioContext.createOscillator()
+        sound.connect(audioConnect)
+        sound.type = 'sine'
+        sound.frequency.value = frequency
+        sound.start()
+        return sound
+    }
+
+    window.addEventListener('keydown' , (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        keyBoardArray.forEach((key) => {
+            if(key.keyCode === event.code) {
+                if(key.pressed !== true) {
+                    key.pressed = true
+                    notesPlaying[key.keyNote] = playNote(key.frequency)
+                    let noteClass = '#' + key.keyNote
+                    let pianoKeyDiv = document.querySelector(noteClass)
+                    pianoKeyDiv.classList.add('depressedKey')
+                }
+            }
+        })
+    })
+
+    window.addEventListener('keyup' , (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        keyBoardArray.forEach((key) => {
+            if(key.keyCode === event.code) {
+                if(key.pressed !== false) {
+                    key.pressed = false
+                    notesPlaying[key.keyNote].stop()
+                    let noteClass = '#' + key.keyNote
+                    let pianoKeyDiv = document.querySelector(noteClass)
+                    pianoKeyDiv.classList.remove('depressedKey')
+                }
+            }
+        })
+    })
+    loadSong(popcornSongNotes)
+}
+
+createGameScreen()
+
+
+
+

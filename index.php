@@ -58,8 +58,13 @@
       </div>
 
     <section class="game-container">
-             <div class="piano-key-container">
-             </div>
+        <div class="instruction-button-container">
+            <button id="instruction-button">&#8505;</button>
+        </div>
+        <div class="game-notes-container">
+        </div>
+        <div class="piano-key-container">
+        </div>
     </section>
 
   </main>
