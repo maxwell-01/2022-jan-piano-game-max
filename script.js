@@ -1,31 +1,37 @@
-
-let blurredAreaModal = document.querySelector('.modal-blurred-area')
 let showInstructionsButton = document.querySelector('#instruction-button')
-let instructionsModal = document.querySelector('.instruction-modal')
 let hideInstructionsModal = document.querySelector('#modal-button')
-let closeModal = (status) => {
-    if(status === true) {
-        blurredAreaModal.style.display = 'none'
-        instructionsModal.style.display = 'none'
-    } else if( status === false) {
-        blurredAreaModal.style.display = 'block'
-        instructionsModal.style.display = 'block'
+let hideGameStartModal = document.querySelector('#start-game-button')
+
+function openCloseModal(modalOverlay, modalBody, status) {
+    if(status === 'close') {
+        document.querySelector(modalOverlay).style.display = 'none'
+        document.querySelector(modalBody).style.display = 'none'
+    } else if(status === 'open') {
+        document.querySelector(modalOverlay).style.display = 'block'
+        document.querySelector(modalBody).style.display = 'block'
     }
 }
+hideGameStartModal.addEventListener('click', (event) => {
+    event.stopPropagation()
+    openCloseModal('.modal-overlay-start', '.start-game-modal', 'close')
+    play()
+})
 
 showInstructionsButton.addEventListener('click', (event) => {
     event.stopPropagation()
-    closeModal(false)
+    openCloseModal('.modal-blurred-area', '.instruction-modal', 'open')
 })
 
 hideInstructionsModal.addEventListener('click', () => {
-    closeModal(true)
+    openCloseModal('.modal-blurred-area', '.instruction-modal', 'close')
 })
 
+let instructionsModal = document.querySelector('.instruction-modal')
+let blurredAreaModal = document.querySelector('.modal-blurred-area')
 window.addEventListener('click', (event) => {
     if (event.target === blurredAreaModal && instructionsModal) {
         event.stopPropagation()
-        closeModal(true)
+        openCloseModal('.modal-blurred-area', '.instruction-modal', 'close')
     }
 })
 
@@ -42,7 +48,7 @@ let keyBoardArray = [
     {
         keyColour: 'black',
         parentKey: 'g3',
-        keyNote: 'g3#',
+        keyNote: 'g3sharp',
         keyCode: 'KeyW',
         label: 'W',
         pressed: false,
@@ -59,7 +65,7 @@ let keyBoardArray = [
     {
         keyColour: 'black',
         parentKey: 'a4',
-        keyNote: 'a4#',
+        keyNote: 'a4sharp',
         keyCode: 'KeyE',
         label: 'E',
         pressed: false,
@@ -84,7 +90,7 @@ let keyBoardArray = [
     {
         keyColour: 'black',
         parentKey: 'c4',
-        keyNote: 'c4#',
+        keyNote: 'c4sharp',
         keyCode: 'KeyT',
         label: 'T',
         pressed: false,
@@ -101,7 +107,7 @@ let keyBoardArray = [
     {
         keyColour: 'black',
         parentKey: 'd4',
-        keyNote: 'd4#',
+        keyNote: 'd4sharp',
         keyCode: 'KeyY',
         label: 'Y',
         pressed: false,
@@ -126,7 +132,7 @@ let keyBoardArray = [
     {
         keyColour: 'black',
         parentKey: 'f4',
-        keyNote: 'f4#',
+        keyNote: 'f4sharp',
         keyCode: 'KeyI',
         label: 'I',
         pressed: false,
@@ -143,7 +149,7 @@ let keyBoardArray = [
     {
         keyColour: 'black',
         parentKey: 'g4',
-        keyNote: 'g4#',
+        keyNote: 'g4sharp',
         keyCode: 'KeyO',
         label: 'O',
         pressed: false,
@@ -159,7 +165,8 @@ let keyBoardArray = [
     },
     {
         keyColour: 'black',
-        keyNote: 'a5#',
+        parentKey: 'a5',
+        keyNote: 'a5sharp',
         keyCode: 'KeyP',
         label: 'P',
         pressed: false,
@@ -183,7 +190,8 @@ let keyBoardArray = [
     },
     {
         keyColour: 'black',
-        keyNote: 'c5#',
+        parentKey: 'c5',
+        keyNote: 'c5sharp',
         keyCode: 'BracketLeft',
         label: '[',
         pressed: false,
@@ -199,7 +207,8 @@ let keyBoardArray = [
     },
     {
         keyColour: 'black',
-        keyNote: 'd5#',
+        parentKey: 'd5',
+        keyNote: 'd5sharp',
         keyCode: 'BracketRight',
         label: ']',
         pressed: false,
@@ -233,98 +242,100 @@ popCornSongNotes = [
     }
 ]
 
-let pianoKeys = document.querySelector('.piano-key-container')
-let gameNotesContainer = document.querySelector('.game-notes-container')
-keyBoardArray.forEach((key) => {
-    if(key.blackKey.keyNote !== null) {
-        pianoKeys.innerHTML +=
-            '<div class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
-            '   <div class="piano-key black-key" data-note="' + key.blackKey.keyNote + '">\n' +
-            '       <p>' + key.blackKey.label + '</p>\n' +
-            '   </div>\n' +
-            '<p>' + key.label + '</p>\n' +
-            '</div>'
-        gameNotesContainer.innerHTML +=
-            '<div class="piano-key-channel white-key-channel" data-channel="' + key.keyNote + '">\n' +
-            '   <div class="piano-key-channel black-key-channel" data-channel="' + key.keyNote + '">\n' +
-            '   </div>\n' +
-            '</div>'
-    } else {
-        pianoKeys.innerHTML +=
-            '<div class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
-            '   <p>' + key.label + '</p>\n' +
-            '</div>'
-        gameNotesContainer.innerHTML +=
-            '<div class="piano-key-channel white-key-channel" data-channel="' + key.keyNote + '">\n' +
-            '</div>'
-    }
-})
+
+
+function createGameScreen() {
+    let pianoKeys = document.querySelector('.piano-key-container')
+    let gameNotesContainer = document.querySelector('.game-notes-container')
+    keyBoardArray.forEach((key) => {
+        if(key.keyColour === 'white') {
+            pianoKeys.innerHTML +=
+                '<div id="' + key.keyNote + '" class="piano-key white-key" data-id="' + key.keyNote + '">\n' +
+                '   <p>' + key.label + '</p>\n' +
+                '</div>'
+            gameNotesContainer.innerHTML +=
+                '<div class="piano-key-channel white-key-channel" data-channel="' + key.keyNote + '">\n' +
+                '</div>'
+        } else if(key.keyColour === 'black') {
+            let parentWhiteKey = document.querySelector('#' + key.parentKey)
+            parentWhiteKey.innerHTML +=
+                '<div id="' + key.keyNote + '" class="piano-key black-key" data-note="' + key.keyNote + '">\n' +
+                '   <p>' + key.label + '</p>\n' +
+                '</div>\n'
+            let parentWhiteChannel = document.querySelector('[data-channel="' + key.parentKey + '"]')
+            parentWhiteChannel.innerHTML +=
+                '<div class="piano-key-channel black-key-channel" data-channel="' + key.keyNote + '">\n' +
+                '</div>'
+        }
+    })
+}
+
 
 function play() {
-        //create function that generates html for notes in channel, pass in the note (it could look up the
-        //  correct channel and apply the correct classes
-        //function to make the note appear in the correct channel at the correct time, timer to remove shown class
-        //  after hit timer reaches 0 (hit timer is the window to hit the key)
-        //array to hold notes that have appeared on screen? Could store whether they were hit or not here too
-        // add timer from start of play
+
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let notesPlaying = {};
+    let audioConnect = null;
+
+    audioConnect = audioContext.createGain();
+    audioConnect.connect(audioContext.destination);
+
+    function playNote(frequency) {
+        let sound = audioContext.createOscillator()
+        sound.connect(audioConnect)
+        sound.type = 'sine'
+        sound.frequency.value = frequency
+        sound.start()
+        return sound
+    }
+
+    window.addEventListener('keydown' , (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        keyBoardArray.forEach((key) => {
+            if(key.keyCode === event.code) {
+                if(key.pressed !== true) {
+                    key.pressed = true
+                    notesPlaying[key.keyNote] = playNote(key.frequency)
+                    let noteClass = '#' + key.keyNote
+                    let pianoKeyDiv = document.querySelector(noteClass)
+                    pianoKeyDiv.classList.add('depressedKey')
+                }
+            }
+        })
+    })
+
+    window.addEventListener('keyup' , (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        keyBoardArray.forEach((key) => {
+            if(key.keyCode === event.code) {
+                if(key.pressed !== false) {
+                    key.pressed = false
+                    notesPlaying[key.keyNote].stop()
+                    let noteClass = '#' + key.keyNote
+                    let pianoKeyDiv = document.querySelector(noteClass)
+                    pianoKeyDiv.classList.remove('depressedKey')
+                }
+            }
+        })
+    })
+    //create function that generates html for notes in channel, pass in the note (it could look up the
+    //  correct channel and apply the correct classes
+    //function to make the note appear in the correct channel at the correct time, timer to remove shown class
+    //  after hit timer reaches 0 (hit timer is the window to hit the key)
+    //array to hold notes that have appeared on screen? Could store whether they were hit or not here too
+    // add timer from start of play
 }
 
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let notesPlaying = {};
-let audioConnect = null;
-
-audioConnect = audioContext.createGain();
-audioConnect.connect(audioContext.destination);
-
-function playNote(frequency) {
-    let sound = audioContext.createOscillator()
-    sound.connect(audioConnect)
-    sound.type = 'sine'
-    sound.frequency.value = frequency
-    sound.start()
-    return sound
-}
-
-window.addEventListener('keydown' , (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-    keyBoardArray.forEach((key) => {
-        if(key.keyCode === event.code) {
-            if(key.pressed !== true) {
-                key.pressed = true
-                notesPlaying[key.keyNote] = playNote(key.frequency)
-            }
-        } else if(key.blackKey.keyCode === event.code) {
-            if(key.blackKey.pressed !== true) {
-                key.blackKey.pressed = true
-                notesPlaying[key.blackKey.keyNote] = playNote(key.blackKey.frequency)
-            }
-        }
-    })
-})
-
-window.addEventListener('keyup' , (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-    keyBoardArray.forEach((key) => {
-        if(key.keyCode === event.code) {
-            if(key.pressed !== false) {
-                key.pressed = false
-                notesPlaying[key.keyNote].stop()
-            }
-        } else if(key.blackKey.keyCode === event.code) {
-            if(key.blackKey.pressed !== false) {
-                key.blackKey.pressed = false
-                notesPlaying[key.blackKey.keyNote].stop()
-            }
-        }
-    })
-})
 
 function createNoteInChannel(note) {
-    let channel = document.querySelector('[data-channel='+note+']')
-    channel.innerHTML +='<div class="target-note" data-floating-note=' + note + '></div>'
-    keyBoardArray.forEach((key) => {
-        if(key.blackKey.keyNote !== null) {
-
+    let channel = document.querySelector('[data-channel="' + note + '"]')
+    channel.innerHTML += '<div class="target-note" data-channel="' + note + '"></div>'
 }
+
+
+createGameScreen()
+play() // remove this line after coding (gets called by start game button)
+
+createNoteInChannel('c4')
