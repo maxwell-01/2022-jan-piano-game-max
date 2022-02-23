@@ -1,14 +1,11 @@
-
-
 let showInstructionsButton = document.querySelector('#instruction-button')
-
 let hideInstructionsModal = document.querySelector('#modal-button')
-function openCloseModal(modalOverlay, modalBody, status) {
 
+function openCloseModal(modalOverlay, modalBody, status) {
     if(status === 'close') {
         document.querySelector(modalOverlay).style.display = 'none'
         document.querySelector(modalBody).style.display = 'none'
-    } else if( status === 'open') {
+    } else if(status === 'open') {
         document.querySelector(modalOverlay).style.display = 'block'
         document.querySelector(modalBody).style.display = 'block'
     }
