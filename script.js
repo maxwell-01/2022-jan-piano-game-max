@@ -18,7 +18,7 @@ showInstructionsButton.addEventListener('click', (event) => {
     closeModal(false)
 })
 
-hideInstructionsModal.addEventListener('click', (event) => {
+hideInstructionsModal.addEventListener('click', () => {
     closeModal(true)
 })
 
@@ -215,6 +215,24 @@ let keyBoardArray = [
             pressed: false,
             frequency: null
         }
+    }
+]
+
+popCornSongNotes = [
+    {
+        keyNote: 'c4',
+        notePlayedAt: 5000, //time after t0 in ms
+        duration: 500 // duration of note in ms
+    },
+    {
+        keyNote: 'd4',
+        notePlayedAt: 5500,
+        duration: 500
+    },
+    {
+        keyNote: 'e4',
+        notePlayedAt: 6000,
+        duration: 500
     }
 ]
 
