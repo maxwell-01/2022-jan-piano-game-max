@@ -35,7 +35,6 @@ window.addEventListener('click', (event) => {
     }
 })
 
-
 let keyBoardArray = [
     {
         keyColour: 'white',
@@ -409,6 +408,7 @@ function createNoteInChannel(noteObject) {
         noteDiv.classList.add('black-note-target')
     }
 }
+
 function loadSong(song) {
     song.forEach((noteTarget) => {
         let noteObject =  keyBoardArray.find(object => object.keyNote === noteTarget.keyNote)
