@@ -416,7 +416,7 @@ function loadSong(song) {
             createNoteInChannel(noteObject)
             let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
             setTimeout(() => {
-                noteDiv.style.visibility = 'hidden'
+                noteDiv.remove()
             }, noteTarget.duration)
         }, noteTarget.notePlayedAt)
     })
