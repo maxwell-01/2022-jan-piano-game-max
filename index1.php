@@ -31,9 +31,13 @@
                   <div>
                       <button id="start-game-button">Start</button>
                   </div>
+                  <div class="instruction-button-container">
+                      <button id="instruction-button">&#8505;</button>
+                  </div>
               </div>
           </div>
       </div>
+
       <div class="modal-blurred-area">
           <div class="instruction-modal">
               <h2>Instructions</h2>
@@ -55,9 +59,6 @@
       </div>
 
     <section class="game-container">
-        <div class="instruction-button-container">
-            <button id="instruction-button">&#8505;</button>
-        </div>
              <div class="piano-key-container">
                   <div class="piano-key white-key" data-note="g0">
                       <div class="piano-key black-key" data-note="g0#">
