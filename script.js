@@ -224,24 +224,28 @@ let keyBoardArray = [
     },
 ]
 
-popCornSongNotes = [
+let popCornSongNotes = [
     {
         keyNote: 'c4',
-        notePlayedAt: 5000, //time after t0 in ms
-        duration: 500 // duration of note in ms
+        notePlayedAt: 1000, //time after t0 in ms
+        duration: 1000 // duration of note in ms
     },
     {
         keyNote: 'd4',
-        notePlayedAt: 5500,
-        duration: 500
+        notePlayedAt: 2000,
+        duration: 1000
     },
     {
         keyNote: 'e4',
-        notePlayedAt: 6000,
-        duration: 500
+        notePlayedAt: 3000,
+        duration: 1000
+    },
+    {
+        keyNote: 'g4',
+        notePlayedAt: 4000,
+        duration: 1000
     }
 ]
-
 
 
 function createGameScreen() {
@@ -270,6 +274,28 @@ function createGameScreen() {
     })
 }
 
+function createNoteInChannel(noteObject) {
+    let channel = document.querySelector('[data-channel="' + noteObject.keyNote + '"]')
+    channel.innerHTML += '<div class="target-note" data-floating-note="' + noteObject.keyNote + '"></div>'
+    let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
+    if(noteObject.keyColour === 'white') {
+        noteDiv.classList.add('white-note-target')
+    } else if (noteObject.keyColour === 'black') {
+        noteDiv.classList.add('black-note-target')
+    }
+}
+function loadSong(song) {
+    song.forEach((noteTarget) => {
+        let noteObject =  keyBoardArray.find(object => object.keyNote === noteTarget.keyNote)
+        setTimeout(() => {
+            createNoteInChannel(noteObject)
+            let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
+            setTimeout(() => {
+                noteDiv.style.visibility = 'hidden'
+            }, noteTarget.duration)
+        }, noteTarget.notePlayedAt)
+    })
+}
 
 function play() {
 
@@ -320,6 +346,7 @@ function play() {
             }
         })
     })
+    loadSong(popCornSongNotes)
     //create function that generates html for notes in channel, pass in the note (it could look up the
     //  correct channel and apply the correct classes
     //function to make the note appear in the correct channel at the correct time, timer to remove shown class
@@ -329,26 +356,10 @@ function play() {
 }
 
 
-function createNoteInChannel(noteObject) {
-    console.log(noteObject)
-    let channel = document.querySelector('[data-channel="' + noteObject.keyNote + '"]')
-    channel.innerHTML += '<div class="target-note" data-floating-note="' + noteObject.keyNote + '"></div>'
-    let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
-    if(noteObject.keyColour === 'white') {
-        noteDiv.classList.add('white-note-target')
-    } else if (noteObject.keyColour === 'black') {
-        noteDiv.classList.add('black-note-target')
-    }
-}
 
 
 createGameScreen()
-play() // remove this line after coding (gets called by start game button)
 
 
 
-let noteC4 = keyBoardArray.find(object => object.keyNote === 'c4')
-let noteC4Sharp = keyBoardArray.find(object => object.keyNote === 'c4sharp')
 
-createNoteInChannel(noteC4)
-createNoteInChannel(noteC4Sharp)
