@@ -252,6 +252,18 @@ keyBoardArray.forEach((key) => {
             '</div>'
     }
 })
+function play() {
+        //create function to generate html for channels
+        //create function that generates html for notes in channel, pass in the note (it could look up the
+        //  correct channel and apply the correct classes
+        //function to make the note appear in the correct channel at the correct time, timer to remove shown class
+        //  after hit timer reaches 0 (hit timer is the window to hit the key)
+        //array to hold notes that have appeared on screen? Could store whether they were hit or not here too
+        // add timer from start of play
+
+    })
+}
+
 
 audioConnect = audioContext.createGain();
 audioConnect.connect(audioContext.destination);
