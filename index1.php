@@ -20,6 +20,20 @@
           <h1>Piano Plinky Plonk</h1>
       </header>
   <main>
+      <div class="modal-overlay-start">
+          <div class="start-game-modal">
+              <div class="start-game-heading">
+                  <h2>Welcome to Piano Plinky Plonk!</h2>
+              </div>
+              <p>The game for aspiring musicians everywhere</p>
+              <div class="start-game-content">
+                  <p>To begin, click the start button below!</p>
+                  <div>
+                      <button id="start-game-button">Start</button>
+                  </div>
+              </div>
+          </div>
+      </div>
       <div class="modal-blurred-area">
           <div class="instruction-modal">
               <h2>Instructions</h2>
