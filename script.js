@@ -221,15 +221,15 @@ let keyBoardArray = [
 keyBoardArray.forEach((key) => {
     if(key.blackKey.keyNote !== null) {
         pianoKeys.innerHTML +=
-        '<div class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
-        '<div class="piano-key black-key" data-note="' + key.blackKey.keyNote + '">\n' +
+        '<div id="' + key.keyNote + '" class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
+        '<div id="' + key.keyNote + '" class="piano-key black-key" data-note="' + key.blackKey.keyNote + '">\n' +
         '<p>' + key.blackKey.label + '</p>\n' +
         '</div>\n' +
         '<p>' + key.label + '</p>\n' +
         '</div>'
     } else {
         pianoKeys.innerHTML +=
-            '<div class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
+            '<div id="' + key.keyNote + '" class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
             '<p>' + key.label + '</p>\n' +
             '</div>'
     }
@@ -255,15 +255,24 @@ window.addEventListener('keydown' , (event) => {
             if(key.pressed !== true) {
                 key.pressed = true
                 notesPlaying[key.keyNote] = playNote(key.frequency)
+                let noteClass = '#' + key.keyNote
+                let pianoKeyDiv = document.querySelector(noteClass)
+                pianoKeyDiv.classList.add('depressedKey')
             }
         } else if(key.blackKey.keyCode === event.code) {
             if(key.blackKey.pressed !== true) {
                 key.blackKey.pressed = true
                 notesPlaying[key.blackKey.keyNote] = playNote(key.blackKey.frequency)
+                let noteClass = '#' + key.keyNote
+                let pianoKeyDiv = document.querySelector(noteClass)
+                pianoKeyDiv.classList.add('depressedKey')
             }
         }
     })
 })
+
+
+
 
 window.addEventListener('keyup' , (event) => {
     event.preventDefault()
@@ -273,11 +282,17 @@ window.addEventListener('keyup' , (event) => {
             if(key.pressed !== false) {
                 key.pressed = false
                 notesPlaying[key.keyNote].stop()
+                let noteClass = '#' + key.keyNote
+                let pianoKeyDiv = document.querySelector(noteClass)
+                pianoKeyDiv.classList.remove('depressedKey')
             }
         } else if(key.blackKey.keyCode === event.code) {
             if(key.blackKey.pressed !== false) {
                 key.blackKey.pressed = false
                 notesPlaying[key.blackKey.keyNote].stop()
+                let noteClass = '#' + key.keyNote
+                let pianoKeyDiv = document.querySelector(noteClass)
+                pianoKeyDiv.classList.remove('depressedKey')
             }
         }
     })
