@@ -227,11 +227,7 @@ keyBoardArray.forEach((key) => {
         '<div id="' + key.keyNote + '" class="piano-key white-key" data-id="' + key.keyNote + '">\n' +
         '<p>' + key.label + '</p>\n' +
         '</div>'
-    }
-})
-
-keyBoardArray.forEach((key) => {
-    if(key.keyColour === 'black') {
+    } else if(key.keyColour === 'black') {
         let parentWhiteKey = document.querySelector('#' + key.parentKey )
         parentWhiteKey.innerHTML +=
             '<div id="' + key.keyNote + '" class="piano-key black-key" data-note="' + key.keyNote + '">\n' +
