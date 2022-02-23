@@ -41,7 +41,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 195.9977,
         blackKey: {
-            keyNote: 'g3#',
+            keyNote: 'g3Sharp',
             keyCode: 'KeyW',
             label: 'W',
             pressed: false,
@@ -55,7 +55,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 220.0000,
         blackKey: {
-            keyNote: 'a4#',
+            keyNote: 'a4Sharp',
             keyCode: 'KeyE',
             label: 'E',
             pressed: false,
@@ -83,7 +83,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 261.6256,
         blackKey: {
-            keyNote: 'c4#',
+            keyNote: 'c4Sharp',
             keyCode: 'KeyT',
             label: 'T',
             pressed: false,
@@ -97,7 +97,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 293.6648,
         blackKey: {
-            keyNote: 'd4#',
+            keyNote: 'd4Sharp',
             keyCode: 'KeyY',
             label: 'Y',
             pressed: false,
@@ -125,7 +125,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 349.2282,
         blackKey: {
-            keyNote: 'f4#',
+            keyNote: 'f4Sharp',
             keyCode: 'KeyI',
             label: 'I',
             pressed: false,
@@ -139,7 +139,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 391.9954,
         blackKey: {
-            keyNote: 'g4#',
+            keyNote: 'g4Sharp',
             keyCode: 'KeyO',
             label: 'O',
             pressed: false,
@@ -153,7 +153,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 440.0000,
         blackKey: {
-            keyNote: 'a5#',
+            keyNote: 'a5Sharp',
             keyCode: 'KeyP',
             label: 'P',
             pressed: false,
@@ -181,7 +181,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 523.2511,
         blackKey: {
-            keyNote: 'c5#',
+            keyNote: 'c5sharp',
             keyCode: 'BracketLeft',
             label: '[',
             pressed: false,
@@ -195,7 +195,7 @@ let keyBoardArray = [
         pressed: false,
         frequency: 587.3295,
         blackKey: {
-            keyNote: 'd5#',
+            keyNote: 'd5Sharp',
             keyCode: 'BracketRight',
             label: ']',
             pressed: false,
@@ -221,15 +221,15 @@ let keyBoardArray = [
 keyBoardArray.forEach((key) => {
     if(key.blackKey.keyNote !== null) {
         pianoKeys.innerHTML +=
-        '<div class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
-        '<div class="piano-key black-key" data-note="' + key.blackKey.keyNote + '">\n' +
+        '<div id="' + key.keyNote + '" class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
+        '<div id="' + key.blackKey.keyNote + '" class="piano-key black-key" data-note="' + key.blackKey.keyNote + '">\n' +
         '<p>' + key.blackKey.label + '</p>\n' +
         '</div>\n' +
         '<p>' + key.label + '</p>\n' +
         '</div>'
     } else {
         pianoKeys.innerHTML +=
-            '<div class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
+            '<div id="' + key.keyNote + '" class="piano-key white-key" data-note="' + key.keyNote + '">\n' +
             '<p>' + key.label + '</p>\n' +
             '</div>'
     }
@@ -255,15 +255,24 @@ window.addEventListener('keydown' , (event) => {
             if(key.pressed !== true) {
                 key.pressed = true
                 notesPlaying[key.keyNote] = playNote(key.frequency)
+                let noteClass = '#' + key.keyNote
+                let pianoKeyDiv = document.querySelector(noteClass)
+                pianoKeyDiv.classList.add('depressedKey')
             }
         } else if(key.blackKey.keyCode === event.code) {
             if(key.blackKey.pressed !== true) {
                 key.blackKey.pressed = true
                 notesPlaying[key.blackKey.keyNote] = playNote(key.blackKey.frequency)
+                let blackNoteID = '#' + key.blackKey.keyNote
+                let pianoKeyDiv = document.querySelector(blackNoteID)
+                pianoKeyDiv.classList.add('depressedKey')
             }
         }
     })
 })
+
+
+
 
 window.addEventListener('keyup' , (event) => {
     event.preventDefault()
@@ -273,11 +282,17 @@ window.addEventListener('keyup' , (event) => {
             if(key.pressed !== false) {
                 key.pressed = false
                 notesPlaying[key.keyNote].stop()
+                let noteClass = '#' + key.keyNote
+                let pianoKeyDiv = document.querySelector(noteClass)
+                pianoKeyDiv.classList.remove('depressedKey')
             }
         } else if(key.blackKey.keyCode === event.code) {
             if(key.blackKey.pressed !== false) {
                 key.blackKey.pressed = false
                 notesPlaying[key.blackKey.keyNote].stop()
+                let noteClass = '#' + key.blackKey.keyNote
+                let pianoKeyDiv = document.querySelector(noteClass)
+                pianoKeyDiv.classList.remove('depressedKey')
             }
         }
     })
