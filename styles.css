@@ -137,6 +137,8 @@ h2 {
     width: 40px;
     height: 40px;
     font-size: 2rem;
+    font-weight: bold;
+    vertical-align: center;
     border-style: solid;
     background-color: #ffffff;
     margin: 10px;
@@ -147,6 +149,7 @@ h2 {
 #instruction-button:hover {
     background-color: #ff0099;
     color: #ffffff;
+    box-shadow: 3px 3px 3px #1DB8DF;
 }
 
 #instruction-button:active {
@@ -214,6 +217,10 @@ footer {
     color: #ff0099;
 }
 
+footer h2 {
+    position: absolute;
+}
+
 footer a {
     padding: 50px;
     text-decoration: none;
@@ -226,6 +233,7 @@ footer a {
 footer a:hover {
     color: #ffffff;
 }
+
 .depressedKey {
     box-shadow: 5px 20px 5px #64e30b;
     background-color: #64e30b;
