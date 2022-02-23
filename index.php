@@ -31,6 +31,9 @@
                   <div>
                       <button id="start-game-button">Start</button>
                   </div>
+                  <div class="instruction-button-container">
+                      <button id="instruction-button">&#8505;</button>
+                  </div>
               </div>
           </div>
       </div>
@@ -63,7 +66,6 @@
         <div class="piano-key-container">
         </div>
     </section>
-
 
   </main>
   <footer>

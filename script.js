@@ -224,27 +224,152 @@ let keyBoardArray = [
     },
 ]
 
-let popCornSongNotes = [
+let popcornSongNotes = [
     {
-        keyNote: 'c4',
-        notePlayedAt: 1000, //time after t0 in ms
-        duration: 1000 // duration of note in ms
+        keyNote: 'b4',
+        notePlayedAt: 2000,
+        duration: 500
+    },
+    {
+        keyNote: 'a4',
+        notePlayedAt: 2500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 3000,
+        duration: 500
+    },
+    {
+        keyNote: 'f4sharp',
+        notePlayedAt: 3500,
+        duration: 500
     },
     {
         keyNote: 'd4',
-        notePlayedAt: 2000,
-        duration: 1000
+        notePlayedAt: 4000,
+        duration: 500
     },
     {
-        keyNote: 'e4',
-        notePlayedAt: 3000,
-        duration: 1000
+        keyNote: 'f4sharp',
+        notePlayedAt: 4500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 5000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 6000,
+        duration: 500
+    },
+    {
+        keyNote: 'a4',
+        notePlayedAt: 6500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 7000,
+        duration: 500
+    },
+    {
+        keyNote: 'f4sharp',
+        notePlayedAt: 7500,
+        duration: 500
+    },
+    {
+        keyNote: 'd4',
+        notePlayedAt: 8000,
+        duration: 500
+    },
+    {
+        keyNote: 'f4sharp',
+        notePlayedAt: 8500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 9000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 10000,
+        duration: 500
+    },
+    {
+        keyNote: 'c4sharp',
+        notePlayedAt: 10500,
+        duration: 500
+    },
+    {
+        keyNote: 'd4',
+        notePlayedAt: 11000,
+        duration: 500
+    },
+    {
+        keyNote: 'c4sharp',
+        notePlayedAt: 11500,
+        duration: 500
+    },
+    {
+        keyNote: 'd4',
+        notePlayedAt: 12000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 12500,
+        duration: 500
+    },
+    {
+        keyNote: 'c4sharp',
+        notePlayedAt: 13000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 13500,
+        duration: 500
+    },
+    {
+        keyNote: 'c4sharp',
+        notePlayedAt: 14000,
+        duration: 500
+    },
+    {
+        keyNote: 'a4',
+        notePlayedAt: 14500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 15000,
+        duration: 500
+    },
+    {
+        keyNote: 'a4',
+        notePlayedAt: 15500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 16000,
+        duration: 500
     },
     {
         keyNote: 'g4',
-        notePlayedAt: 4000,
-        duration: 1000
-    }
+        notePlayedAt: 16500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 17000,
+        duration: 500
+    },
 ]
 
 
@@ -346,17 +471,8 @@ function play() {
             }
         })
     })
-    loadSong(popCornSongNotes)
-    //create function that generates html for notes in channel, pass in the note (it could look up the
-    //  correct channel and apply the correct classes
-    //function to make the note appear in the correct channel at the correct time, timer to remove shown class
-    //  after hit timer reaches 0 (hit timer is the window to hit the key)
-    //array to hold notes that have appeared on screen? Could store whether they were hit or not here too
-    // add timer from start of play
+    loadSong(popcornSongNotes)
 }
-
-
-
 
 createGameScreen()
 
