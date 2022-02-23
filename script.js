@@ -221,6 +221,154 @@ let keyBoardArray = [
     },
 ]
 
+let popcornSongNotes = [
+    {
+        keyNote: 'b4',
+        notePlayedAt: 2000,
+        duration: 500
+    },
+    {
+        keyNote: 'a4',
+        notePlayedAt: 2500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 3000,
+        duration: 500
+    },
+    {
+        keyNote: 'f4Sharp',
+        notePlayedAt: 3500,
+        duration: 500
+    },
+    {
+        keyNote: 'd4',
+        notePlayedAt: 4000,
+        duration: 500
+    },
+    {
+        keyNote: 'f4Sharp',
+        notePlayedAt: 4500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 5000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 6000,
+        duration: 500
+    },
+    {
+        keyNote: 'a4',
+        notePlayedAt: 6000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 6500,
+        duration: 500
+    },
+    {
+        keyNote: 'f4Sharp',
+        notePlayedAt: 7000,
+        duration: 500
+    },
+    {
+        keyNote: 'd4',
+        notePlayedAt: 7500,
+        duration: 500
+    },
+    {
+        keyNote: 'f4Sharp',
+        notePlayedAt: 8000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 8500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 9500,
+        duration: 500
+    },
+    {
+        keyNote: 'c4Sharp',
+        notePlayedAt: 10000,
+        duration: 500
+    },
+    {
+        keyNote: 'd4',
+        notePlayedAt: 10500,
+        duration: 500
+    },
+    {
+        keyNote: 'c4Sharp',
+        notePlayedAt: 11000,
+        duration: 500
+    },
+    {
+        keyNote: 'd4',
+        notePlayedAt: 11500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 12000,
+        duration: 500
+    },
+    {
+        keyNote: 'c4Sharp',
+        notePlayedAt: 12500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 13000,
+        duration: 500
+    },
+    {
+        keyNote: 'c4Sharp',
+        notePlayedAt: 13500,
+        duration: 500
+    },
+    {
+        keyNote: 'a4',
+        notePlayedAt: 14000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 14500,
+        duration: 500
+    },
+    {
+        keyNote: 'a4',
+        notePlayedAt: 15000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 15500,
+        duration: 500
+    },
+    {
+        keyNote: 'g4',
+        notePlayedAt: 16000,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 16500,
+        duration: 500
+    },
+]
+
 keyBoardArray.forEach((key) => {
     if(key.keyColour === 'white') {
         pianoKeys.innerHTML +=
