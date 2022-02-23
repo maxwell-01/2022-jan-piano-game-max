@@ -264,107 +264,107 @@ let popcornSongNotes = [
     },
     {
         keyNote: 'a4',
-        notePlayedAt: 6000,
-        duration: 500
-    },
-    {
-        keyNote: 'b4',
         notePlayedAt: 6500,
         duration: 500
     },
     {
-        keyNote: 'f4Sharp',
+        keyNote: 'b4',
         notePlayedAt: 7000,
         duration: 500
     },
     {
-        keyNote: 'd4',
+        keyNote: 'f4Sharp',
         notePlayedAt: 7500,
         duration: 500
     },
     {
-        keyNote: 'f4Sharp',
+        keyNote: 'd4',
         notePlayedAt: 8000,
         duration: 500
     },
     {
-        keyNote: 'b4',
+        keyNote: 'f4Sharp',
         notePlayedAt: 8500,
         duration: 500
     },
     {
         keyNote: 'b4',
-        notePlayedAt: 9500,
+        notePlayedAt: 9000,
         duration: 500
     },
     {
-        keyNote: 'c4Sharp',
+        keyNote: 'b4',
         notePlayedAt: 10000,
         duration: 500
     },
     {
-        keyNote: 'd4',
+        keyNote: 'c4Sharp',
         notePlayedAt: 10500,
         duration: 500
     },
     {
-        keyNote: 'c4Sharp',
+        keyNote: 'd4',
         notePlayedAt: 11000,
         duration: 500
     },
     {
-        keyNote: 'd4',
+        keyNote: 'c4Sharp',
         notePlayedAt: 11500,
         duration: 500
     },
     {
-        keyNote: 'b4',
+        keyNote: 'd4',
         notePlayedAt: 12000,
         duration: 500
     },
     {
-        keyNote: 'c4Sharp',
+        keyNote: 'b4',
         notePlayedAt: 12500,
         duration: 500
     },
     {
-        keyNote: 'b4',
+        keyNote: 'c4Sharp',
         notePlayedAt: 13000,
         duration: 500
     },
     {
-        keyNote: 'c4Sharp',
+        keyNote: 'b4',
         notePlayedAt: 13500,
         duration: 500
     },
     {
-        keyNote: 'a4',
+        keyNote: 'c4Sharp',
         notePlayedAt: 14000,
         duration: 500
     },
     {
-        keyNote: 'b4',
+        keyNote: 'a4',
         notePlayedAt: 14500,
         duration: 500
     },
     {
-        keyNote: 'a4',
+        keyNote: 'b4',
         notePlayedAt: 15000,
         duration: 500
     },
     {
-        keyNote: 'b4',
+        keyNote: 'a4',
         notePlayedAt: 15500,
         duration: 500
     },
     {
-        keyNote: 'g4',
+        keyNote: 'b4',
         notePlayedAt: 16000,
         duration: 500
     },
     {
-        keyNote: 'b4',
+        keyNote: 'g4',
         notePlayedAt: 16500,
+        duration: 500
+    },
+    {
+        keyNote: 'b4',
+        notePlayedAt: 17000,
         duration: 500
     },
 ]
