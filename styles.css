@@ -190,6 +190,12 @@ h2 {
     font-size: 1rem;
     font-weight: bold;
 }
+.piano-key div {
+    order: 1;
+}
+.piano-key p {
+    order: 2;
+}
 
 .white-key {
     background-color: #ffffff;
@@ -224,4 +230,8 @@ footer a {
 
 footer a:hover {
     color: #ffffff;
+}
+.depressedKey {
+    box-shadow: 5px 20px 5px #64e30b;
+    background-color: #64e30b;
 }
