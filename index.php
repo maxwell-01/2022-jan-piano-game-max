@@ -32,7 +32,7 @@
                       <button id="start-game-button">Start</button>
                   </div>
                   <div class="instruction-button-container">
-                      <button id="instruction-button">&#8505;</button>
+                      <button id="instruction-button">i</button>
                   </div>
               </div>
           </div>
@@ -69,7 +69,12 @@
 
   </main>
   <footer>
-    <a href="https://linktr.ee/charlotte.codes">Meet the team!</a>
+    <h2>Meet the team!</h2>
+    <a href="https://www.linkedin.com/in/rich-kerr-b1918583/" target="_blank">Rich Kerr</a>
+    <a href="https://www.linkedin.com/in/liam-l-08a6b3140/" target="_blank">Liam Lawrence</a>
+    <a href="https://www.linkedin.com/in/charlotte-buckley-93866416a/" target="_blank">Charlotte Buckley</a>
+    <a href="https://www.linkedin.com/in/maxwellnewton/" target="_blank">Maxwell Newton</a>
+    <a href="https://www.linkedin.com/in/oliver-ritchie-973341147/" target="_blank">Ollie Ritchie</a>
   </footer>
 
 </body>
