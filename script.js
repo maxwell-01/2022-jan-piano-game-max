@@ -1,5 +1,6 @@
 let showInstructionsButton = document.querySelector('#instruction-button')
 let hideInstructionsModal = document.querySelector('#modal-button')
+let hideGameStartModal = document.querySelector('#start-game-button')
 
 function openCloseModal(modalOverlay, modalBody, status) {
     if(status === 'close') {
@@ -10,6 +11,11 @@ function openCloseModal(modalOverlay, modalBody, status) {
         document.querySelector(modalBody).style.display = 'block'
     }
 }
+
+hideGameStartModal.addEventListener('click', (event) => {
+    event.stopPropagation()
+    openCloseModal('.modal-overlay-start', '.start-game-modal', 'close')
+})
 
 showInstructionsButton.addEventListener('click', (event) => {
     event.stopPropagation()
