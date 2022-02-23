@@ -157,7 +157,7 @@ let keyBoardArray = [
             keyCode: 'KeyP',
             label: 'P',
             pressed: false,
-            frequency: 493.8833
+            frequency: 466.1638
         }
     },
     {
@@ -165,7 +165,7 @@ let keyBoardArray = [
         keyCode: 'Semicolon',
         label: ';',
         pressed: false,
-        frequency: 466.1638,
+        frequency: 493.8833,
         blackKey: {
             keyNote: null,
             keyCode: null,
