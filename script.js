@@ -329,13 +329,26 @@ function play() {
 }
 
 
-function createNoteInChannel(note) {
-    let channel = document.querySelector('[data-channel="' + note + '"]')
-    channel.innerHTML += '<div class="target-note" data-channel="' + note + '"></div>'
+function createNoteInChannel(noteObject) {
+    console.log(noteObject)
+    let channel = document.querySelector('[data-channel="' + noteObject.keyNote + '"]')
+    channel.innerHTML += '<div class="target-note" data-floating-note="' + noteObject.keyNote + '"></div>'
+    let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
+    if(noteObject.keyColour === 'white') {
+        noteDiv.classList.add('white-note-target')
+    } else if (noteObject.keyColour === 'black') {
+        noteDiv.classList.add('black-note-target')
+    }
 }
 
 
 createGameScreen()
 play() // remove this line after coding (gets called by start game button)
 
-createNoteInChannel('c4')
+
+
+let noteC4 = keyBoardArray.find(object => object.keyNote === 'c4')
+let noteC4Sharp = keyBoardArray.find(object => object.keyNote === 'c4sharp')
+
+createNoteInChannel(noteC4)
+createNoteInChannel(noteC4Sharp)
