@@ -469,8 +469,6 @@ function createGameScreen() {
 // ]
 
 function addNoteToChannel(noteObject, noteHTML) {
-    console.log(noteObject)
-    console.log(noteHTML)
     let channel = document.querySelector('[data-channel="' + noteObject.noteTarget.note + '"]')
     channel.innerHTML += noteHTML
 }
@@ -479,18 +477,24 @@ function loadSong(song) {
     for(let i = 0; i < song.length; i++) {
         let noteTarget = song[i]
         let noteObject = keyBoardArray.find(object => object.note === noteTarget.note)
-        let noteHTML = generateNoteHTML(i)
+        let noteHTML = generateNoteHTML(noteObject, i)
         gameState.push({noteObject, noteTarget, "noteHTML": noteHTML, "showing": false, "targetHit": null, "id": i})
     }
 }
 
-function generateNoteHTML(noteId){
-    let noteDiv = '<div class="target-note" data-floating-note="' + noteId + '"></div>'
+function generateNoteHTML(note, id){
+    let noteDiv = ""
+    if(note.colour === 'white'){
+        noteDiv = '<div class="target-note white-note-target" data-floating-note="' + id + '" id="' + id + '"></div>'
+    } else if(note.colour === 'black'){
+        noteDiv = '<div class="target-note black-note-target" data-floating-note="' + id + '" id="' + id + '"></div>'
+    }
     return noteDiv
 }
 
 function animateNoteTarget(gameStateNoteObject) {
-    $('#' + gameStateNoteObject.id).fadeIn(1000).animate({top: 500}, 3000, 'linear')
+    console.log(gameStateNoteObject.id)
+    $('#' + gameStateNoteObject.id).fadeIn(1000).animate({top: "400px"}, 3000, 'linear')
 }
 
 function gameEngine() {
@@ -504,7 +508,7 @@ function gameEngine() {
             clearInterval(gameTime)
         }
         if(notesToBePlayed[0].noteTarget.notePlayedAt === gameTimer){
-            let nextNoteHTML = generateNoteHTML(notesToBePlayed[0].id)
+            let nextNoteHTML = notesToBePlayed[0].noteHTML
             addNoteToChannel(notesToBePlayed[0], nextNoteHTML)
             animateNoteTarget(notesToBePlayed[0])
             notesToBePlayed.shift()
@@ -522,10 +526,8 @@ function play() {
     let audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let notesPlaying = {};
     let audioConnect = null;
-
     audioConnect = audioContext.createGain();
     audioConnect.connect(audioContext.destination);
-
     function playNote(frequency) {
         let sound = audioContext.createOscillator()
         sound.connect(audioConnect)
@@ -534,7 +536,6 @@ function play() {
         sound.start()
         return sound
     }
-
     window.addEventListener('keydown' , (event) => {
         event.preventDefault()
         keyBoardArray.forEach((key) => {
