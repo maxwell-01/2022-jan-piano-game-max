@@ -7,43 +7,48 @@
 }
 
 body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
     font-family: 'Montserrat', sans-serif;
     font-size: 10px;
-    padding: 20px;
     background-color: #000000;
 }
 
 header {
-    min-height: 5vh;
     text-align: center;
     font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
     border-style: double;
-    margin-bottom: 20px;
     background-color: #000000;
     box-shadow: 5px 5px 5px #ff0099;
     color: #ff0099;
 }
+
 main {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
     border-style: double;
     background-color: #000000;
     box-shadow: 5px 5px 5px #ff0099;
     color: #ff0099;
-    margin-bottom: 10px;
+    margin: 20px 0;
 }
+
 footer {
-    min-height: 5vh;
     display: flex;
     justify-content: center;
     border-style: double;
     background-color: #000000;
     box-shadow: 5px 5px 5px #ff0099;
     color: #ff0099;
+    margin-bottom: 15px;
 }
 
 footer a {
-    padding: 50px;
+    padding: 10px;
     text-decoration: none;
     font-size: 1.5rem;
     font-weight: bold;
@@ -139,22 +144,23 @@ h2 {
 }
 
 .game-container {
-    margin: 0 auto;
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     justify-content: center;
     max-width: 1000px;
-    min-height: 65vh;
-    margin-bottom: 30px;
+    width: 100%;
     padding: 20px;
+    align-items: center;
 }
 
 .piano-key-container {
     position: relative;
     display: flex;
+    flex-grow: 1;
     border: black 1px solid;
-    height: 400px;
     padding: 20px;
+    width: 100%;
 }
 
 .piano-key {
