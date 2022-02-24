@@ -25,15 +25,18 @@ let showInstructionsButton = document.querySelector('#instruction-button')
 let hideInstructionsModal = document.querySelector('#modal-button')
 let instructionsModal = document.querySelector('.instruction-modal')
 let modalBlurredArea = document.querySelector('.modal-blurred-area')
-showInstructionsButton.addEventListener('click', (event) => {
+
+instructionsModal.addEventListener('click', () => {
     event.stopPropagation()
+})
+
+showInstructionsButton.addEventListener('click', (event) => {
     openCloseModal('.modal-blurred-area', '.instruction-modal', true)
 })
 hideInstructionsModal.addEventListener('click', () => {
     openCloseModal('.modal-blurred-area', '.instruction-modal', false)
 })
 modalBlurredArea.addEventListener('click', (event) => {
-    event.stopPropagation()
     openCloseModal('.modal-blurred-area', '.instruction-modal', false)
 })
 
