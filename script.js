@@ -11,6 +11,7 @@ function openCloseModal(modalOverlay, modalBody, status) {
         document.querySelector(modalBody).style.display = 'block'
     }
 }
+
 hideGameStartModal.addEventListener('click', (event) => {
     event.stopPropagation()
     openCloseModal('.modal-overlay-start', '.start-game-modal', 'close')
@@ -227,150 +228,180 @@ let popcornSongNotes = [
     {
         keyNote: 'b4',
         notePlayedAt: 2000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'a4',
         notePlayedAt: 2500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 3000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'f4sharp',
         notePlayedAt: 3500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'd4',
         notePlayedAt: 4000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'f4sharp',
         notePlayedAt: 4500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 5000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 6000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'a4',
         notePlayedAt: 6500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 7000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'f4sharp',
         notePlayedAt: 7500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'd4',
         notePlayedAt: 8000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'f4sharp',
         notePlayedAt: 8500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 9000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 10000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'c4sharp',
         notePlayedAt: 10500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'd4',
         notePlayedAt: 11000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'c4sharp',
         notePlayedAt: 11500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'd4',
         notePlayedAt: 12000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 12500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'c4sharp',
         notePlayedAt: 13000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 13500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'c4sharp',
         notePlayedAt: 14000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'a4',
         notePlayedAt: 14500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 15000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'a4',
         notePlayedAt: 15500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 16000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'g4',
         notePlayedAt: 16500,
-        duration: 500
+        duration: 500,
+        showing: false
     },
     {
         keyNote: 'b4',
         notePlayedAt: 17000,
-        duration: 500
+        duration: 500,
+        showing: false
     },
 ]
 
+let gameState = []
 
 function createGameScreen() {
     let pianoKeys = document.querySelector('.piano-key-container')
@@ -398,29 +429,92 @@ function createGameScreen() {
     })
 }
 
-function createNoteInChannel(noteObject) {
-    let channel = document.querySelector('[data-channel="' + noteObject.keyNote + '"]')
-    channel.innerHTML += '<div class="target-note" data-floating-note="' + noteObject.keyNote + '"></div>'
-    let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
+function generateNotes(noteObject) {
     if(noteObject.keyColour === 'white') {
         noteDiv.classList.add('white-note-target')
+        slideDownAnimation(".white-note-target", "250", "3")
     } else if (noteObject.keyColour === 'black') {
         noteDiv.classList.add('black-note-target')
+        slideDownAnimation(".black-note-target", "250", "3")
     }
 }
 
-function loadSong(song) {
-    song.forEach((noteTarget) => {
-        let noteObject =  keyBoardArray.find(object => object.keyNote === noteTarget.keyNote)
-        setTimeout(() => {
-            createNoteInChannel(noteObject)
-            let noteDiv = document.querySelector('[data-floating-note="' + noteObject.keyNote + '"]')
-            setTimeout(() => {
-                noteDiv.remove()
-            }, noteTarget.duration)
-        }, noteTarget.notePlayedAt)
-    })
+// create function to display on the page the notes at the right time
+// function to hide the note when its expired
+// let exampleGameState = [
+//     0: {
+//         noteObject: {
+//             keyColour: 'white',
+//             keyNote: 'b4',
+//             keyCode: 'KeyD',
+//             label: 'D',
+//             pressed: false,
+//             frequency: 246.9417
+//         },
+//         noteTarget: {
+//             keyNote: 'b4',
+//             notePlayedAt: 2000,
+//             duration: 500
+//         },
+//         noteHTML: "div blah",
+//         showing: false,
+//         targetHit: null,
+//         id: 0
+//     }
+// ]
+
+function addNoteToChannel(noteObject, noteHTML) {
+    let channel = document.querySelector('[data-channel="' + noteObject.noteTarget.keyNote + '"]')
+    channel.innerHTML += noteHTML
 }
+
+function loadSong(song) {
+    for(let i = 0; i < song.length; i++) {
+        let noteTarget = song[i]
+        let noteObject = keyBoardArray.find(object => object.keyNote === noteTarget.keyNote)
+        let noteHTML = generateNoteHTML(i)
+        gameState.push({noteObject, noteTarget, "noteHTML": noteHTML, "showing": false, "targetHit": null, "id": i})
+    }
+}
+
+function generateNoteHTML(noteId){
+    let noteDiv = '<div class="target-note" data-floating-note="' + noteId + '"></div>'
+    return noteDiv
+}
+
+function animateNoteTarget(gameStateNoteObject) {
+    $('#' + gameStateNoteObject.id).fadeIn(1000).animate({top: 500}, 3000, 'linear')
+}
+
+function gameEngine() {
+    loadSong(popcornSongNotes)
+    let gameTimer = 0 // time game has been running in ms
+    let lastNote = gameState.slice(-1)[0].noteTarget
+    let totalGameTime = lastNote.notePlayedAt
+    let notesToBePlayed = gameState
+
+    console.log(notesToBePlayed[0])
+
+    let gameTime = setInterval(() => {
+        console.log(gameTimer)
+        if(gameTimer === totalGameTime){
+            clearInterval(gameTime)
+        }
+        if(notesToBePlayed[0].noteTarget.notePlayedAt === gameTimer){
+            console.log("there is a note to be played")
+            let nextNoteHTML = generateNoteHTML(notesToBePlayed[0].id)
+            addNoteToChannel(notesToBePlayed[0], nextNoteHTML)
+            animateNoteTarget(notesToBePlayed[0])
+            notesToBePlayed.shift()
+        }
+        gameTimer += 100
+    }, 100)
+}
+// pull array of notes to be played into the function
+// each loop check if the note should be played
+// if yes, check each subsequent note until the time is different
+// generate all notes to be played
+// remove those notes from notes to be played
 
 function play() {
 
@@ -471,11 +565,7 @@ function play() {
             }
         })
     })
-    loadSong(popcornSongNotes)
+    gameEngine()
 }
 
 createGameScreen()
-
-
-
-
