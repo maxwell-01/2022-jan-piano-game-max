@@ -248,7 +248,6 @@ keyBoardArray.forEach((key) => {
 
 window.addEventListener('keydown' , (event) => {
     event.preventDefault()
-    event.stopPropagation()
     keyBoardArray.forEach((key) => {
         if(key.code === event.code) {
             if(key.pressed === false) {
@@ -263,7 +262,6 @@ window.addEventListener('keydown' , (event) => {
 
 window.addEventListener('keyup' , (event) => {
     event.preventDefault()
-    event.stopPropagation()
     keyBoardArray.forEach((key) => {
         if(key.code === event.code) {
             if(key.pressed === true) {
