@@ -485,16 +485,28 @@ function loadSong(song) {
 function generateNoteHTML(note, id){
     let noteDiv = ""
     if(note.colour === 'white'){
-        noteDiv = '<div class="target-note white-note-target" data-floating-note="' + id + '" id="' + id + '"></div>'
+        noteDiv = '<div class="target-note white-note-target" data-floating-note="' + id + '" id="note' + id + '"></div>'
     } else if(note.colour === 'black'){
-        noteDiv = '<div class="target-note black-note-target" data-floating-note="' + id + '" id="' + id + '"></div>'
+        noteDiv = '<div class="target-note black-note-target" data-floating-note="' + id + '" id="note' + id + '"></div>'
     }
     return noteDiv
 }
 
-function animateNoteTarget(gameStateNoteObject) {
-    console.log(gameStateNoteObject.id)
-    $('#' + gameStateNoteObject.id).fadeIn(1000).animate({top: "400px"}, 3000, 'linear')
+function animateNoteTarget(gameNoteObject) {
+    let divToAnimate = document.querySelector('#note' + gameNoteObject.id)
+    let animationTime = 1000
+    divToAnimate.animate([
+        { transform: 'translateY(0px'},
+        { transform: 'translateY(500px'}
+        ], {
+        duration: animationTime,
+        iterations: 1
+        }
+    )
+    setTimeout(() => {
+        divToAnimate.style.display = 'none'
+    }, animationTime)
+
 }
 
 function gameEngine() {
