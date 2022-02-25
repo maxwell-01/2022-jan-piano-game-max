@@ -203,6 +203,7 @@ h2 {
     height: 50px;
     position: absolute;
     top: 0;
+    display: none;
 }
 
 .white-note-target {

@@ -8,15 +8,6 @@ function openCloseModal(modalOverlay, modalBody, isModalOpen) {
     }
 }
 
-function playNote(frequency) {
-    let sound = audioContext.createOscillator()
-    sound.connect(audioConnect)
-    sound.type = 'sine'
-    sound.frequency.value = frequency
-    sound.start()
-    return sound
-}
-
 let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 audioConnect = audioContext.createGain();
 audioConnect.connect(audioContext.destination);
@@ -426,7 +417,7 @@ function createGameScreen() {
                 '   <p>' + key.label + '</p>\n' +
                 '</div>'
             gameNotesContainer.innerHTML +=
-                '<div class="piano-key-channel white-key-channel" data-channel="' + key.note + '">\n' +
+                '<div class="piano-key-channel white-key-channel" id="channel-' + key.note + '">\n' +
                 '</div>'
         } else if(key.colour === 'black') {
             let parentWhiteKeyDiv = document.querySelector('#' + key.parentKey )
@@ -435,9 +426,9 @@ function createGameScreen() {
                 '   <p>' + key.label + '</p>\n' +
                 '</div>\n' + parentWhiteKeyDiv.innerHTML
             parentWhiteKeyDiv.innerHTML = newContent
-            let parentWhiteChannel = document.querySelector('[data-channel="' + key.parentKey + '"]')
+            let parentWhiteChannel = document.querySelector('#channel-' + key.parentKey)
             parentWhiteChannel.innerHTML +=
-                '<div class="piano-key-channel black-key-channel" data-channel="' + key.note + '">\n' +
+                '<div class="piano-key-channel black-key-channel" id="channel-' + key.note + '">\n' +
                 '</div>'
         }
     })
@@ -468,9 +459,9 @@ function createGameScreen() {
 //     }
 // ]
 
-function addNoteToChannel(noteObject, noteHTML) {
-    let channel = document.querySelector('[data-channel="' + noteObject.noteTarget.note + '"]')
-    channel.innerHTML += noteHTML
+function addNoteToChannel(noteObject) {
+    let channel = document.querySelector('#channel-' + noteObject.noteTarget.note)
+    channel.innerHTML += noteObject.noteHTML
 }
 
 function loadSong(song) {
@@ -479,32 +470,35 @@ function loadSong(song) {
         let noteObject = keyBoardArray.find(object => object.note === noteTarget.note)
         let noteHTML = generateNoteHTML(noteObject, i)
         gameState.push({noteObject, noteTarget, "noteHTML": noteHTML, "showing": false, "targetHit": null, "id": i})
+        addNoteToChannel(gameState[i])
     }
 }
 
 function generateNoteHTML(note, id){
     let noteDiv = ""
     if(note.colour === 'white'){
-        noteDiv = '<div class="target-note white-note-target" data-floating-note="' + id + '" id="note' + id + '"></div>'
+        noteDiv = '<div class="target-note white-note-target" data-floating-note="' + id + '" id="note-' + id + '"></div>'
     } else if(note.colour === 'black'){
-        noteDiv = '<div class="target-note black-note-target" data-floating-note="' + id + '" id="note' + id + '"></div>'
+        noteDiv = '<div class="target-note black-note-target" data-floating-note="' + id + '" id="note-' + id + '"></div>'
     }
     return noteDiv
 }
 
 function animateNoteTarget(gameNoteObject) {
-    let divToAnimate = document.querySelector('#note' + gameNoteObject.id)
-    let animationTime = 1000
+    let divToAnimate = document.querySelector('#note-' + gameNoteObject.id)
+    let animationTime = 2000
+    let animationDistance = document.querySelector('#channel-' + gameNoteObject.noteObject.note).clientHeight + 50 // 50 is note height, to be dynamic when notes are different lengths
+    divToAnimate.style.display = "inline-block"
     divToAnimate.animate([
-        { transform: 'translateY(0px'},
-        { transform: 'translateY(500px'}
+        { transform: 'translateY(0px)'},
+        { transform: 'translateY(' + animationDistance + 'px)'}
         ], {
         duration: animationTime,
         iterations: 1
         }
     )
     setTimeout(() => {
-        divToAnimate.style.display = 'none'
+        divToAnimate.style.display = "none"
     }, animationTime)
 
 }
@@ -517,7 +511,6 @@ function playSongOnScreen(totalGameTime, notesToBePlayed){
         }
         if(notesToBePlayed[0].noteTarget.notePlayedAt === gameTimer){
             let nextNoteHTML = notesToBePlayed[0].noteHTML
-            addNoteToChannel(notesToBePlayed[0], nextNoteHTML)
             animateNoteTarget(notesToBePlayed[0])
             notesToBePlayed.shift()
         }
@@ -531,7 +524,15 @@ function gameEngine() {
     let totalGameTime = lastNote.notePlayedAt
     let notesToBePlayed = gameState.map(((x) => x))
     playSongOnScreen(totalGameTime, notesToBePlayed)
+}
 
+function playNote(frequency) {
+    let sound = audioContext.createOscillator()
+    sound.connect(audioConnect)
+    sound.type = 'sine'
+    sound.frequency.value = frequency
+    sound.start()
+    return sound
 }
 
 function play() {
@@ -540,14 +541,6 @@ function play() {
     let audioConnect = null;
     audioConnect = audioContext.createGain();
     audioConnect.connect(audioContext.destination);
-    function playNote(frequency) {
-        let sound = audioContext.createOscillator()
-        sound.connect(audioConnect)
-        sound.type = 'sine'
-        sound.frequency.value = frequency
-        sound.start()
-        return sound
-    }
     window.addEventListener('keydown' , (event) => {
         event.preventDefault()
         keyBoardArray.forEach((key) => {
