@@ -411,7 +411,7 @@ let popcornSongNotes = [
         notePlayedAt: 17000,
         duration: 500,
         showing: false
-    },
+    }
 ]
 
 let gameState = []
@@ -509,12 +509,8 @@ function animateNoteTarget(gameNoteObject) {
 
 }
 
-function gameEngine() {
-    loadSong(popcornSongNotes)
-    let gameTimer = 0 // time game has been running in ms
-    let lastNote = gameState.slice(-1)[0].noteTarget
-    let totalGameTime = lastNote.notePlayedAt
-    let notesToBePlayed = gameState
+function playSongOnScreen(totalGameTime, notesToBePlayed){
+    let gameTimer = 0
     let gameTime = setInterval(() => {
         if(gameTimer === totalGameTime){
             clearInterval(gameTime)
@@ -528,11 +524,15 @@ function gameEngine() {
         gameTimer += 100
     }, 100)
 }
-// pull array of notes to be played into the function
-// each loop check if the note should be played
-// if yes, check each subsequent note until the time is different
-// generate all notes to be played
-// remove those notes from notes to be played
+
+function gameEngine() {
+    loadSong(popcornSongNotes)
+    let lastNote = gameState.slice(-1)[0].noteTarget
+    let totalGameTime = lastNote.notePlayedAt
+    let notesToBePlayed = gameState.map(((x) => x))
+    playSongOnScreen(totalGameTime, notesToBePlayed)
+
+}
 
 function play() {
     let audioContext = new (window.AudioContext || window.webkitAudioContext)();
