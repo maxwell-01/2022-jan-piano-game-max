@@ -426,18 +426,18 @@ function createGameScreen() {
 //     }
 // ]
 
-function loadSong(song, noteSpeed) {
+function loadSong(song, gameSpeed) {
     for(let i = 0; i < song.length; i++) {
         let targetNote = song[i]
         let keyboardNote = keyBoardArray.find(object => object.note === targetNote.note)
         gameState.push({keyboardNote, targetNote, "showing": false, "targetHit": null, "id": i})
-        loadNotesIntoGameScreen(gameState[i], noteSpeed)
+        loadNotesIntoGameScreen(gameState[i], gameSpeed)
     }
 }
 
 function loadNotesIntoGameScreen(gameNoteObject, gameSpeed){
     let channel = document.querySelector('#channel-' + gameNoteObject.targetNote.note)
-    let noteHeight = gameNoteObject.targetNote.duration / 6.5 / gameSpeed
+    let noteHeight = gameNoteObject.targetNote.duration / (6.5 * gameSpeed)
     let noteDiv
     if(gameNoteObject.keyboardNote.colour === 'white'){
         noteDiv = '<div class="target-note white-note-target" id="note-' + gameNoteObject.id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
@@ -491,9 +491,6 @@ function gameEngine() {
     loadSong(popcornSongNotes, gameSpeed)
     let notesToBePlayed = gameState.map(((x) => x))
     playSongOnScreen(notesToBePlayed, gameSpeed)
-    // note height is duration in pixels
-    // note display is top - note height
-    //need to hide ones appearing outside game contianer
     // change game start to be before first note depending on speed plus first duration
 
     //for more loops, add more notes to playing array
