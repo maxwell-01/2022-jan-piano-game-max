@@ -230,356 +230,151 @@ let keyBoardArray = [
 
 let popcornSongNotes = [
     {
-        note: 'b4',
+        note: 'b5',
         notePlayedAt: 2000,
-        duration: 5000,
-        showing: false
+        duration:500
     },
     {
-        note: 'a4',
+        note: 'a5',
         notePlayedAt: 2500,
-        duration: 500,
-        showing: false
+        duration:500
     },
-    {
-        note: 'b4',
-        notePlayedAt: 3000,
-        duration: 500,
-        showing: false
-    },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 3000,
+    //     duration:200
+    // },
     // {
     //     note: 'f4sharp',
     //     notePlayedAt: 3500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:500
     // },
     // {
     //     note: 'd4',
     //     notePlayedAt: 4000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:500
     // },
     // {
     //     note: 'f4sharp',
     //     notePlayedAt: 4500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:500
     // },
     // {
     //     note: 'b4',
     //     notePlayedAt: 5000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:500
     // },
     // {
-    //     note: 'b4',
+    //     note: 'b5',
     //     notePlayedAt: 6000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:500
     // },
     // {
-    //     note: 'a4',
+    //     note: 'a5',
     //     notePlayedAt: 6500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:500
     // },
     // {
-    //     note: 'b4',
+    //     note: 'b5',
     //     notePlayedAt: 7000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'f4sharp',
     //     notePlayedAt: 7500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'd4',
     //     notePlayedAt: 8000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'f4sharp',
     //     notePlayedAt: 8500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'b4',
     //     notePlayedAt: 9000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
-    //     note: 'b4',
+    //     note: 'b5',
     //     notePlayedAt: 10000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'c4sharp',
     //     notePlayedAt: 10500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'd4',
     //     notePlayedAt: 11000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'c4sharp',
     //     notePlayedAt: 11500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'd4',
     //     notePlayedAt: 12000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
-    //     note: 'b4',
+    //     note: 'b5',
     //     notePlayedAt: 12500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'c4sharp',
     //     notePlayedAt: 13000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
-    //     note: 'b4',
+    //     note: 'b5',
     //     notePlayedAt: 13500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'c4sharp',
     //     notePlayedAt: 14000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
-    //     note: 'a4',
+    //     note: 'a5',
     //     notePlayedAt: 14500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
-    //     note: 'b4',
+    //     note: 'b5',
     //     notePlayedAt: 15000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
-    //     note: 'a4',
+    //     note: 'a5',
     //     notePlayedAt: 15500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
-    //     note: 'b4',
+    //     note: 'b5',
     //     notePlayedAt: 16000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
     //     note: 'g4',
     //     notePlayedAt: 16500,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // },
     // {
-    //     note: 'b4',
+    //     note: 'b5',
     //     notePlayedAt: 17000,
-    //     duration: 500,
-    //     showing: false
+    //     duration:200
     // }
-] // 3 notes
-// let popcornSongNotes = [
-//     {
-//         note: 'b4',
-//         notePlayedAt: 2000,
-//         duration: 5000,
-//         showing: false
-//     },
-//     {
-//         note: 'a4',
-//         notePlayedAt: 2500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 3000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'f4sharp',
-//         notePlayedAt: 3500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'd4',
-//         notePlayedAt: 4000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'f4sharp',
-//         notePlayedAt: 4500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 5000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 6000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'a4',
-//         notePlayedAt: 6500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 7000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'f4sharp',
-//         notePlayedAt: 7500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'd4',
-//         notePlayedAt: 8000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'f4sharp',
-//         notePlayedAt: 8500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 9000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 10000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'c4sharp',
-//         notePlayedAt: 10500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'd4',
-//         notePlayedAt: 11000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'c4sharp',
-//         notePlayedAt: 11500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'd4',
-//         notePlayedAt: 12000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 12500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'c4sharp',
-//         notePlayedAt: 13000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 13500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'c4sharp',
-//         notePlayedAt: 14000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'a4',
-//         notePlayedAt: 14500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 15000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'a4',
-//         notePlayedAt: 15500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 16000,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'g4',
-//         notePlayedAt: 16500,
-//         duration: 500,
-//         showing: false
-//     },
-//     {
-//         note: 'b4',
-//         notePlayedAt: 17000,
-//         duration: 500,
-//         showing: false
-//     }
-// ]
+]
 
 let gameState = []
 
@@ -610,9 +405,6 @@ function createGameScreen() {
     })
 }
 
-
-// create function to display on the page the notes at the right time
-// function to hide the note when its expired
 // let exampleGameState = [
 //     0: {
 //         keyboardNote: {
@@ -634,66 +426,71 @@ function createGameScreen() {
 //     }
 // ]
 
-function loadSong(song) {
+function loadSong(song, noteSpeed) {
     for(let i = 0; i < song.length; i++) {
         let targetNote = song[i]
         let keyboardNote = keyBoardArray.find(object => object.note === targetNote.note)
         gameState.push({keyboardNote, targetNote, "showing": false, "targetHit": null, "id": i})
-        loadNotesIntoGameScreen(gameState[i])
+        loadNotesIntoGameScreen(gameState[i], noteSpeed)
     }
 }
 
-function loadNotesIntoGameScreen(gameNoteObject){
+function loadNotesIntoGameScreen(gameNoteObject, gameSpeed){
     let channel = document.querySelector('#channel-' + gameNoteObject.targetNote.note)
+    let noteHeight = gameNoteObject.targetNote.duration / 6.5 / gameSpeed
     let noteDiv
     if(gameNoteObject.keyboardNote.colour === 'white'){
-        noteDiv = '<div class="target-note white-note-target" id="note-' + gameNoteObject.id + '" style="height:' + gameNoteObject.targetNote.duration + ';"></div>' // not working!?
+        noteDiv = '<div class="target-note white-note-target" id="note-' + gameNoteObject.id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
     } else if(gameNoteObject.keyboardNote.colour === 'black'){
-        noteDiv = '<div class="target-note black-note-target" id="note-' + gameNoteObject.id + '" style="height:' + gameNoteObject.targetNote.duration + ';"></div>'
+        noteDiv = '<div class="target-note black-note-target" id="note-' + gameNoteObject.id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
     }
     channel.innerHTML += noteDiv
-    return noteDiv
 }
 
-function animateNoteTarget(gameNoteObject, animationTime) {
+function playSongOnScreen(notesToBePlayed, gameSpeed){
+    let gameTimer = 0
+    let gameTime = setInterval(() => {
+        if(notesToBePlayed[0].targetNote.notePlayedAt === gameTimer){
+            animateNoteTarget(notesToBePlayed[0], gameSpeed)
+            notesToBePlayed.shift()
+        }
+        gameTimer += 100
+        if(notesToBePlayed.length === 0){
+            console.log('song loop finished')
+            clearInterval(gameTime)
+        }
+    }, 100 / (gameSpeed**2) )
+}
+
+function animateNoteTarget(gameNoteObject, gameSpeed) {
     let divToAnimate = document.querySelector('#note-' + gameNoteObject.id)
-    let animationDistance = document.querySelector('#channel-' + gameNoteObject.targetNote.note).clientHeight + 50 // 50 is note height, to be dynamic when notes are different lengths
+    let channelHeight = document.querySelector('#channel-' + gameNoteObject.targetNote.note).clientHeight
+    let noteHeight = divToAnimate.clientHeight
+    let animationBaseTime = 2000 / gameSpeed // base time to travel across screen in ms - lower is faster
+
+    let noteAnimationDistance = channelHeight + noteHeight
+    let noteAnimationTime = (animationBaseTime * (noteAnimationDistance)) / channelHeight
+
     divToAnimate.style.display = "inline-block"
     divToAnimate.animate([
-        { transform: 'translateY(0px)'},
-        { transform: 'translateY(' + animationDistance + 'px)'}
+            { transform: 'translateY(0px)'},
+            { transform: 'translateY(' + noteAnimationDistance + 'px)'}
         ], {
-        duration: animationTime,
-        iterations: 1
+            duration: noteAnimationTime,
+            iterations: 1
         }
     )
     setTimeout(() => {
         divToAnimate.style.display = "none"
-    }, animationTime)
+    }, noteAnimationTime)
 
-}
-
-function playSongOnScreen(totalGameTime, notesToBePlayed){
-    let gameTimer = 0
-    let noteSpeed = 2000
-    let gameTime = setInterval(() => {
-        if(notesToBePlayed[0].targetNote.notePlayedAt - noteSpeed === gameTimer){
-            animateNoteTarget(notesToBePlayed[0], noteSpeed)
-            notesToBePlayed.shift()
-        }
-        gameTimer += 100
-        if(gameTimer === totalGameTime || notesToBePlayed.length === 0){
-            clearInterval(gameTime)
-        }
-    }, 100)
 }
 
 function gameEngine() {
-    loadSong(popcornSongNotes)
-    let lastNote = gameState.slice(-1)[0].targetNote
-    let totalGameTime = lastNote.notePlayedAt
+    let gameSpeed = 1
+    loadSong(popcornSongNotes, gameSpeed)
     let notesToBePlayed = gameState.map(((x) => x))
-    playSongOnScreen(totalGameTime, notesToBePlayed)
+    playSongOnScreen(notesToBePlayed, gameSpeed)
     // note height is duration in pixels
     // note display is top - note height
     //need to hide ones appearing outside game contianer
