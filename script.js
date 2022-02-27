@@ -420,35 +420,45 @@ function createGameScreen() {
 //             notePlayedAt: 2000,
 //             duration: 500
 //         },
-//         showing: false,
+//         played: false,
 //         targetHit: null,
 //         id: 0
 //     }
 // ]
 
+// let popcornSongNotes = [
+//     {
+//         note: 'b5',
+//         notePlayedAt: 0,
+//         duration:500
+//     },
+
 function loadSongIntoGame(song, gameSpeed) {
     for(let i = 0; i < song.length; i++) {
         let targetNote = song[i]
         let keyboardNote = keyBoardArray.find(object => object.note === targetNote.note)
-        gameState.push({keyboardNote, targetNote, "showing": false, "targetHit": null, "id": i})
-        let channel = document.querySelector('#channel-' + gameState[i].targetNote.note)
-        let noteHeight = gameState[i].targetNote.duration / (6.5 * gameSpeed)
+        gameState.push({keyboardNote, targetNote, "played": false, "targetHit": null, "id": i})
+        let channel = document.querySelector('#channel-' + song[i].note)
+        let noteHeight = song[i].duration / (6.5 * gameSpeed)
         let noteDiv
-        if(gameState[i].keyboardNote.colour === 'white'){
-            noteDiv = '<div class="target-note white-note-target" id="note-' + gameState[i].id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
-        } else if(gameState[i].keyboardNote.colour === 'black'){
-            noteDiv = '<div class="target-note black-note-target" id="note-' + gameState[i].id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
+
+        if(keyboardNote.colour === 'white'){
+            noteDiv = '<div class="target-note white-note-target" id="note-' + i + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
+        } else if(keyboardNote.colour === 'black'){
+            noteDiv = '<div class="target-note black-note-target" id="note-' + i + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
         }
         channel.innerHTML += noteDiv
     }
 }
 
-function playSongOnScreen(notesToBePlayed, gameSpeed, noteScreenTravelTime){
+function playSongOnScreen(gameSpeed, noteScreenTravelTime){
+    let notesPlayed = 0
     let gameTimer = 0
     let gameTime = setInterval(() => {
-        if((notesToBePlayed[0].targetNote.notePlayedAt) === gameTimer){
-            let divToAnimate = document.querySelector('#note-' + notesToBePlayed[0].id)
-            let channelHeight = document.querySelector('#channel-' + notesToBePlayed[0].targetNote.note).clientHeight
+        // limitation - can only serve one note at a time
+        if((gameState[notesPlayed].targetNote.notePlayedAt) === gameTimer){
+            let divToAnimate = document.querySelector('#note-' + gameState[notesPlayed].id)
+            let channelHeight = document.querySelector('#channel-' + gameState[notesPlayed].targetNote.note).clientHeight
             let noteHeight = divToAnimate.clientHeight
             let noteAnimationDistance = channelHeight + noteHeight
             let noteAnimationTime = (noteScreenTravelTime * (noteAnimationDistance)) / channelHeight
@@ -460,28 +470,27 @@ function playSongOnScreen(notesToBePlayed, gameSpeed, noteScreenTravelTime){
                     iterations: 1
                 }
             )
-            notesToBePlayed.shift()
+            gameState[notesPlayed].played = true
+            notesPlayed++
         }
         gameTimer += 100
-        if(notesToBePlayed.length === 0){
+        console.log(gameTimer)
+        if(gameState.length === notesPlayed){
             console.log('song loop finished')
             clearInterval(gameTime)
         }
-        console.log(gameTimer)
     }, 100 / (gameSpeed**2) )
 }
 
-function gameEngine() {
+function gameEngine(song) {
     let gameSpeed = 1 // multiplier to change game speed
     let noteScreenTravelTime = 2000 / gameSpeed // the time in ms for a note to travel down the screen
-    loadSongIntoGame(popcornSongNotes, gameSpeed)
-    let notesToBePlayed = gameState.map(((x) => x))
-    playSongOnScreen(notesToBePlayed, gameSpeed, noteScreenTravelTime)
-    // change game start to be before first note depending on speed plus first duration
+    loadSongIntoGame(song, gameSpeed)
+    playSongOnScreen(gameSpeed, noteScreenTravelTime)
 
-    //for more loops, add more notes to playing array
-    // clean up game state to remove unused params, eg showing
-    // load song secong time into game state, reduce note speed
+    //for more loops, add more notes to gamestate
+    // load songs and play songs 2nd time with increased game speed
+    //on game over count how many notes played, or how many notes hit - duplicate info, no because you will have lives
 }
 
 function playNote(frequency) {
@@ -494,6 +503,7 @@ function playNote(frequency) {
 }
 
 function play() {
+    let song = popcornSongNotes
     let audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let notesPlaying = {};
     let audioConnect;
@@ -528,7 +538,7 @@ function play() {
             }
         })
     })
-    gameEngine()
+    gameEngine(song)
 }
 
 createGameScreen()
