@@ -186,7 +186,7 @@ h2 {
     justify-content: center;
     max-width: 1000px;
     width: 100%;
-    padding: 20px;
+    padding: 0 20px 20px;
     align-items: center;
 }
 
@@ -196,6 +196,25 @@ h2 {
     height: 300px;
     padding: 0 20px;
     width: 100%;
+    overflow: hidden;
+}
+
+.target-note {
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    top: 0;
+}
+
+.white-note-target {
+    background-color: #ff0099;
+    border-radius: 20px;
+    width: 80%;
+}
+
+.black-note-target {
+    background-color: #1DB8DF;
+    border-radius: 20px;
 }
 
 .piano-key-channel {
@@ -204,6 +223,11 @@ h2 {
     flex-grow: 1;
     align-items: center;
     justify-content: flex-start;
+}
+
+.white-key-channel {
+    width: 100%;
+    position: relative;
 }
 
 .black-key-channel {
@@ -216,8 +240,6 @@ h2 {
     position: relative;
     display: flex;
     flex-grow: 1;
-    border: black 1px solid;
-    padding: 20px;
     width: 100%;
 }
 
@@ -280,21 +302,4 @@ footer a:hover {
 .depressedKey {
     box-shadow: 5px 20px 5px #64e30b;
     background-color: #64e30b;
-}
-
-.target-note {
-    width: 100%;
-    height: 50px;
-    background-color: #1DB8DF;
-    position: relative;
-}
-
-.white-note-target {
-    background-color: #ff0099;
-    border-radius: 20px;
-}
-
-.black-note-target {
-    background-color: #1DB8DF;
-    border-radius: 20px;
 }

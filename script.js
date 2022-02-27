@@ -8,15 +8,6 @@ function openCloseModal(modalOverlay, modalBody, isModalOpen) {
     }
 }
 
-function playNote(frequency) {
-    let sound = audioContext.createOscillator()
-    sound.connect(audioConnect)
-    sound.type = 'sine'
-    sound.frequency.value = frequency
-    sound.start()
-    return sound
-}
-
 let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 audioConnect = audioContext.createGain();
 audioConnect.connect(audioContext.destination);
@@ -27,7 +18,7 @@ let hideInstructionsModal = document.querySelector('#modal-button')
 let instructionsModal = document.querySelector('.instruction-modal')
 let modalBlurredArea = document.querySelector('.modal-blurred-area')
 
-instructionsModal.addEventListener('click', () => {
+instructionsModal.addEventListener('click', (event) => {
     event.stopPropagation()
 })
 
@@ -36,13 +27,13 @@ hideGameStartModal.addEventListener('click', (event) => {
     openCloseModal('.modal-overlay-start', '.start-game-modal', false)
     play()
 })
-showInstructionsButton.addEventListener('click', (event) => {
+showInstructionsButton.addEventListener('click', () => {
     openCloseModal('.modal-blurred-area', '.instruction-modal', true)
 })
 hideInstructionsModal.addEventListener('click', () => {
     openCloseModal('.modal-blurred-area', '.instruction-modal', false)
 })
-modalBlurredArea.addEventListener('click', (event) => {
+modalBlurredArea.addEventListener('click', () => {
     openCloseModal('.modal-blurred-area', '.instruction-modal', false)
 })
 
@@ -239,152 +230,153 @@ let keyBoardArray = [
 
 let popcornSongNotes = [
     {
-        note: 'b4',
+        note: 'b5',
         notePlayedAt: 2000,
-        duration: 500
+        duration:500
     },
     {
-        note: 'a4',
+        note: 'a5',
         notePlayedAt: 2500,
-        duration: 500
+        duration:500
     },
-    {
-        note: 'b4',
-        notePlayedAt: 3000,
-        duration: 500
-    },
-    {
-        note: 'f4sharp',
-        notePlayedAt: 3500,
-        duration: 500
-    },
-    {
-        note: 'd4',
-        notePlayedAt: 4000,
-        duration: 500
-    },
-    {
-        note: 'f4sharp',
-        notePlayedAt: 4500,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 5000,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 6000,
-        duration: 500
-    },
-    {
-        note: 'a4',
-        notePlayedAt: 6500,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 7000,
-        duration: 500
-    },
-    {
-        note: 'f4sharp',
-        notePlayedAt: 7500,
-        duration: 500
-    },
-    {
-        note: 'd4',
-        notePlayedAt: 8000,
-        duration: 500
-    },
-    {
-        note: 'f4sharp',
-        notePlayedAt: 8500,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 9000,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 10000,
-        duration: 500
-    },
-    {
-        note: 'c4sharp',
-        notePlayedAt: 10500,
-        duration: 500
-    },
-    {
-        note: 'd4',
-        notePlayedAt: 11000,
-        duration: 500
-    },
-    {
-        note: 'c4sharp',
-        notePlayedAt: 11500,
-        duration: 500
-    },
-    {
-        note: 'd4',
-        notePlayedAt: 12000,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 12500,
-        duration: 500
-    },
-    {
-        note: 'c4sharp',
-        notePlayedAt: 13000,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 13500,
-        duration: 500
-    },
-    {
-        note: 'c4sharp',
-        notePlayedAt: 14000,
-        duration: 500
-    },
-    {
-        note: 'a4',
-        notePlayedAt: 14500,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 15000,
-        duration: 500
-    },
-    {
-        note: 'a4',
-        notePlayedAt: 15500,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 16000,
-        duration: 500
-    },
-    {
-        note: 'g4',
-        notePlayedAt: 16500,
-        duration: 500
-    },
-    {
-        note: 'b4',
-        notePlayedAt: 17000,
-        duration: 500
-    },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 3000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'f4sharp',
+    //     notePlayedAt: 3500,
+    //     duration:500
+    // },
+    // {
+    //     note: 'd4',
+    //     notePlayedAt: 4000,
+    //     duration:500
+    // },
+    // {
+    //     note: 'f4sharp',
+    //     notePlayedAt: 4500,
+    //     duration:500
+    // },
+    // {
+    //     note: 'b4',
+    //     notePlayedAt: 5000,
+    //     duration:500
+    // },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 6000,
+    //     duration:500
+    // },
+    // {
+    //     note: 'a5',
+    //     notePlayedAt: 6500,
+    //     duration:500
+    // },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 7000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'f4sharp',
+    //     notePlayedAt: 7500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'd4',
+    //     notePlayedAt: 8000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'f4sharp',
+    //     notePlayedAt: 8500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'b4',
+    //     notePlayedAt: 9000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 10000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'c4sharp',
+    //     notePlayedAt: 10500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'd4',
+    //     notePlayedAt: 11000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'c4sharp',
+    //     notePlayedAt: 11500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'd4',
+    //     notePlayedAt: 12000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 12500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'c4sharp',
+    //     notePlayedAt: 13000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 13500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'c4sharp',
+    //     notePlayedAt: 14000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'a5',
+    //     notePlayedAt: 14500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 15000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'a5',
+    //     notePlayedAt: 15500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 16000,
+    //     duration:200
+    // },
+    // {
+    //     note: 'g4',
+    //     notePlayedAt: 16500,
+    //     duration:200
+    // },
+    // {
+    //     note: 'b5',
+    //     notePlayedAt: 17000,
+    //     duration:200
+    // }
 ]
 
+let gameState = []
 
 function createGameScreen() {
     let pianoKeys = document.querySelector('.piano-key-container')
@@ -396,7 +388,7 @@ function createGameScreen() {
                 '   <p>' + key.label + '</p>\n' +
                 '</div>'
             gameNotesContainer.innerHTML +=
-                '<div class="piano-key-channel white-key-channel" data-channel="' + key.note + '">\n' +
+                '<div class="piano-key-channel white-key-channel" id="channel-' + key.note + '">\n' +
                 '</div>'
         } else if(key.colour === 'black') {
             let parentWhiteKeyDiv = document.querySelector('#' + key.parentKey )
@@ -405,56 +397,125 @@ function createGameScreen() {
                 '   <p>' + key.label + '</p>\n' +
                 '</div>\n' + parentWhiteKeyDiv.innerHTML
             parentWhiteKeyDiv.innerHTML = newContent
-            let parentWhiteChannel = document.querySelector('[data-channel="' + key.parentKey + '"]')
+            let parentWhiteChannel = document.querySelector('#channel-' + key.parentKey)
             parentWhiteChannel.innerHTML +=
-                '<div class="piano-key-channel black-key-channel" data-channel="' + key.note + '">\n' +
+                '<div class="piano-key-channel black-key-channel" id="channel-' + key.note + '">\n' +
                 '</div>'
         }
     })
 }
 
-function createNoteInChannel(noteObject) {
-    let channel = document.querySelector('[data-channel="' + noteObject.note + '"]')
-    channel.innerHTML += '<div class="target-note" data-floating-note="' + noteObject.note + '"></div>'
-    let noteDiv = document.querySelector('[data-floating-note="' + noteObject.note + '"]')
-    if(noteObject.colour === 'white') {
-        noteDiv.classList.add('white-note-target')
-    } else if (noteObject.colour === 'black') {
-        noteDiv.classList.add('black-note-target')
+// let exampleGameState = [
+//     0: {
+//         keyboardNote: {
+//             colour: 'white',
+//             note: 'b4',
+//             code: 'KeyD',
+//             label: 'D',
+//             pressed: false,
+//             frequency: 246.9417
+//         },
+//         targetNote: {
+//             note: 'b4',
+//             notePlayedAt: 2000,
+//             duration: 500
+//         },
+//         showing: false,
+//         targetHit: null,
+//         id: 0
+//     }
+// ]
+
+function loadSong(song, noteSpeed) {
+    for(let i = 0; i < song.length; i++) {
+        let targetNote = song[i]
+        let keyboardNote = keyBoardArray.find(object => object.note === targetNote.note)
+        gameState.push({keyboardNote, targetNote, "showing": false, "targetHit": null, "id": i})
+        loadNotesIntoGameScreen(gameState[i], noteSpeed)
     }
 }
 
-function loadSong(song) {
-    song.forEach((noteTarget) => {
-        let noteObject =  keyBoardArray.find(object => object.note === noteTarget.note)
-        setTimeout(() => {
-            createNoteInChannel(noteObject)
-            let noteDiv = document.querySelector('[data-floating-note="' + noteObject.note + '"]')
-            setTimeout(() => {
-                noteDiv.remove()
-            }, noteTarget.duration)
-        }, noteTarget.notePlayedAt)
-    })
+function loadNotesIntoGameScreen(gameNoteObject, gameSpeed){
+    let channel = document.querySelector('#channel-' + gameNoteObject.targetNote.note)
+    let noteHeight = gameNoteObject.targetNote.duration / 6.5 / gameSpeed
+    let noteDiv
+    if(gameNoteObject.keyboardNote.colour === 'white'){
+        noteDiv = '<div class="target-note white-note-target" id="note-' + gameNoteObject.id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
+    } else if(gameNoteObject.keyboardNote.colour === 'black'){
+        noteDiv = '<div class="target-note black-note-target" id="note-' + gameNoteObject.id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
+    }
+    channel.innerHTML += noteDiv
+}
+
+function playSongOnScreen(notesToBePlayed, gameSpeed){
+    let gameTimer = 0
+    let gameTime = setInterval(() => {
+        if(notesToBePlayed[0].targetNote.notePlayedAt === gameTimer){
+            animateNoteTarget(notesToBePlayed[0], gameSpeed)
+            notesToBePlayed.shift()
+        }
+        gameTimer += 100
+        if(notesToBePlayed.length === 0){
+            console.log('song loop finished')
+            clearInterval(gameTime)
+        }
+    }, 100 / (gameSpeed**2) )
+}
+
+function animateNoteTarget(gameNoteObject, gameSpeed) {
+    let divToAnimate = document.querySelector('#note-' + gameNoteObject.id)
+    let channelHeight = document.querySelector('#channel-' + gameNoteObject.targetNote.note).clientHeight
+    let noteHeight = divToAnimate.clientHeight
+    let animationBaseTime = 2000 / gameSpeed // base time to travel across screen in ms - lower is faster
+
+    let noteAnimationDistance = channelHeight + noteHeight
+    let noteAnimationTime = (animationBaseTime * (noteAnimationDistance)) / channelHeight
+
+    divToAnimate.style.display = "inline-block"
+    divToAnimate.animate([
+            { transform: 'translateY(0px)'},
+            { transform: 'translateY(' + noteAnimationDistance + 'px)'}
+        ], {
+            duration: noteAnimationTime,
+            iterations: 1
+        }
+    )
+    setTimeout(() => {
+        divToAnimate.style.display = "none"
+    }, noteAnimationTime)
+
+}
+
+function gameEngine() {
+    let gameSpeed = 1
+    loadSong(popcornSongNotes, gameSpeed)
+    let notesToBePlayed = gameState.map(((x) => x))
+    playSongOnScreen(notesToBePlayed, gameSpeed)
+    // note height is duration in pixels
+    // note display is top - note height
+    //need to hide ones appearing outside game contianer
+    // change game start to be before first note depending on speed plus first duration
+
+    //for more loops, add more notes to playing array
+    // clean up game state to remove unused params, eg showing
+    // load song secong time into game state, reduce note speed
+}
+
+function playNote(frequency) {
+    let sound = audioContext.createOscillator()
+    sound.connect(audioConnect)
+    sound.type = 'sine'
+    sound.frequency.value = frequency
+    sound.start()
+    return sound
 }
 
 function play() {
-
     let audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let notesPlaying = {};
-    let audioConnect = null;
-
+    let audioConnect;
     audioConnect = audioContext.createGain();
     audioConnect.connect(audioContext.destination);
-
-    function playNote(frequency) {
-        let sound = audioContext.createOscillator()
-        sound.connect(audioConnect)
-        sound.type = 'sine'
-        sound.frequency.value = frequency
-        sound.start()
-        return sound
-    }
-
     window.addEventListener('keydown' , (event) => {
         event.preventDefault()
         keyBoardArray.forEach((key) => {
@@ -484,12 +545,7 @@ function play() {
             }
         })
     })
-    loadSong(popcornSongNotes)
-
+    gameEngine()
 }
 
 createGameScreen()
-
-
-
-
