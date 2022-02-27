@@ -231,19 +231,19 @@ let keyBoardArray = [
 let popcornSongNotes = [
     {
         note: 'b5',
-        notePlayedAt: 2000,
+        notePlayedAt: 0,
         duration:500
     },
     {
         note: 'a5',
-        notePlayedAt: 2500,
+        notePlayedAt: 500,
         duration:500
     },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 3000,
-    //     duration:200
-    // },
+    {
+        note: 'b5',
+        notePlayedAt: 1000,
+        duration:500
+    },
     // {
     //     note: 'f4sharp',
     //     notePlayedAt: 3500,
@@ -426,32 +426,40 @@ function createGameScreen() {
 //     }
 // ]
 
-function loadSong(song, gameSpeed) {
+function loadSongIntoGame(song, gameSpeed) {
     for(let i = 0; i < song.length; i++) {
         let targetNote = song[i]
         let keyboardNote = keyBoardArray.find(object => object.note === targetNote.note)
         gameState.push({keyboardNote, targetNote, "showing": false, "targetHit": null, "id": i})
-        loadNotesIntoGameScreen(gameState[i], gameSpeed)
+        let channel = document.querySelector('#channel-' + gameState[i].targetNote.note)
+        let noteHeight = gameState[i].targetNote.duration / (6.5 * gameSpeed)
+        let noteDiv
+        if(gameState[i].keyboardNote.colour === 'white'){
+            noteDiv = '<div class="target-note white-note-target" id="note-' + gameState[i].id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
+        } else if(gameState[i].keyboardNote.colour === 'black'){
+            noteDiv = '<div class="target-note black-note-target" id="note-' + gameState[i].id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
+        }
+        channel.innerHTML += noteDiv
     }
 }
 
-function loadNotesIntoGameScreen(gameNoteObject, gameSpeed){
-    let channel = document.querySelector('#channel-' + gameNoteObject.targetNote.note)
-    let noteHeight = gameNoteObject.targetNote.duration / (6.5 * gameSpeed)
-    let noteDiv
-    if(gameNoteObject.keyboardNote.colour === 'white'){
-        noteDiv = '<div class="target-note white-note-target" id="note-' + gameNoteObject.id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
-    } else if(gameNoteObject.keyboardNote.colour === 'black'){
-        noteDiv = '<div class="target-note black-note-target" id="note-' + gameNoteObject.id + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
-    }
-    channel.innerHTML += noteDiv
-}
-
-function playSongOnScreen(notesToBePlayed, gameSpeed){
+function playSongOnScreen(notesToBePlayed, gameSpeed, noteScreenTravelTime){
     let gameTimer = 0
     let gameTime = setInterval(() => {
-        if(notesToBePlayed[0].targetNote.notePlayedAt === gameTimer){
-            animateNoteTarget(notesToBePlayed[0], gameSpeed)
+        if((notesToBePlayed[0].targetNote.notePlayedAt) === gameTimer){
+            let divToAnimate = document.querySelector('#note-' + notesToBePlayed[0].id)
+            let channelHeight = document.querySelector('#channel-' + notesToBePlayed[0].targetNote.note).clientHeight
+            let noteHeight = divToAnimate.clientHeight
+            let noteAnimationDistance = channelHeight + noteHeight
+            let noteAnimationTime = (noteScreenTravelTime * (noteAnimationDistance)) / channelHeight
+            divToAnimate.animate([
+                    { transform: 'translateY(0px)'},
+                    { transform: 'translateY(' + noteAnimationDistance + 'px)'}
+                ], {
+                    duration: noteAnimationTime,
+                    iterations: 1
+                }
+            )
             notesToBePlayed.shift()
         }
         gameTimer += 100
@@ -459,38 +467,16 @@ function playSongOnScreen(notesToBePlayed, gameSpeed){
             console.log('song loop finished')
             clearInterval(gameTime)
         }
+        console.log(gameTimer)
     }, 100 / (gameSpeed**2) )
 }
 
-function animateNoteTarget(gameNoteObject, gameSpeed) {
-    let divToAnimate = document.querySelector('#note-' + gameNoteObject.id)
-    let channelHeight = document.querySelector('#channel-' + gameNoteObject.targetNote.note).clientHeight
-    let noteHeight = divToAnimate.clientHeight
-    let animationBaseTime = 2000 / gameSpeed // base time to travel across screen in ms - lower is faster
-
-    let noteAnimationDistance = channelHeight + noteHeight
-    let noteAnimationTime = (animationBaseTime * (noteAnimationDistance)) / channelHeight
-
-    divToAnimate.style.display = "inline-block"
-    divToAnimate.animate([
-            { transform: 'translateY(0px)'},
-            { transform: 'translateY(' + noteAnimationDistance + 'px)'}
-        ], {
-            duration: noteAnimationTime,
-            iterations: 1
-        }
-    )
-    setTimeout(() => {
-        divToAnimate.style.display = "none"
-    }, noteAnimationTime)
-
-}
-
 function gameEngine() {
-    let gameSpeed = 1
-    loadSong(popcornSongNotes, gameSpeed)
+    let gameSpeed = 1 // multiplier to change game speed
+    let noteScreenTravelTime = 2000 / gameSpeed // the time in ms for a note to travel down the screen
+    loadSongIntoGame(popcornSongNotes, gameSpeed)
     let notesToBePlayed = gameState.map(((x) => x))
-    playSongOnScreen(notesToBePlayed, gameSpeed)
+    playSongOnScreen(notesToBePlayed, gameSpeed, noteScreenTravelTime)
     // change game start to be before first note depending on speed plus first duration
 
     //for more loops, add more notes to playing array
