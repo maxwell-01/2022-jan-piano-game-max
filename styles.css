@@ -1,10 +1,15 @@
 body {
+    width: 100%;
+    background-color: #000000;
+}
+.full-screen-game {
     height: 100vh;
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
     font-size: 10px;
     background-color: #000000;
+    margin: 10px;
 }
 
 header {
@@ -141,7 +146,7 @@ main {
 }
 
 h2 {
-    margin: 0;
+
     font-size: 1.5rem;
     padding-bottom: 10px;
 }
@@ -193,10 +198,11 @@ h2 {
 .game-notes-container {
     display: flex;
     border: black 1px solid;
-    height: 300px;
+    flex-grow: 5;
     padding: 0 20px;
     width: 100%;
     overflow: hidden;
+    position: relative;
 }
 
 .target-note {
@@ -253,6 +259,7 @@ h2 {
     box-shadow: 5px 5px 5px #1DB8DF;
     font-size: 1rem;
     font-weight: bold;
+    transition: all 0.25s ease;
 }
 
 .piano-key p {
@@ -280,6 +287,7 @@ footer {
     background-color: #000000;
     box-shadow: 5px 5px 5px #ff0099;
     color: #ff0099;
+    margin: 10px;
 }
 
 footer h2 {
