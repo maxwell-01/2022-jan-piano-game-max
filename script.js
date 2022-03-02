@@ -478,7 +478,7 @@ let exmapleNotesToPlay = {
     // and so on...
 }
 
-function loadSongIntoGame(song, gameSpeed) {
+function loadSongIntoGame(song) {
     Object.keys(pianoKeys).forEach((key) => { //create notesToPlayArray
         notesInChannels[key] = []
     })
@@ -486,36 +486,63 @@ function loadSongIntoGame(song, gameSpeed) {
         let songNote = song[i]
         let pianoKey = pianoKeys[songNote.note]
         notesInChannels[song[i].note].push({"targetHit": null, "noteId": i})
-        notesToPlay.push({note: song[i], "noteId": i})
         let channel = document.querySelector('#channel-' + song[i].note)
-        let noteHeight = song[i].duration / (6.5 * gameSpeed)
         let noteDiv
         if(pianoKey.colour === 'white'){
-            noteDiv = '<div class="target-note white-note-target" id="note-' + i + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
+            noteDiv = '<div class="target-note white-note-target" id="note-' + i + '"></div>' //  style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"
         } else if(pianoKey.colour === 'black'){
-            noteDiv = '<div class="target-note black-note-target" id="note-' + i + '" style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"></div>'
+            noteDiv = '<div class="target-note black-note-target" id="note-' + i + '"></div>' // style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"
         }
         channel.innerHTML += noteDiv
     }
 }
 
-function playNoteOnScreen(gameSpeed, noteScreenTravelTime, nextNoteToPlay){
-    let divToAnimate = document.querySelector('#note-' + notesToPlay[nextNoteToPlay].noteId)
-    let channelHeight = document.querySelector('.piano-key-channel').clientHeight
-    let noteHeight = divToAnimate.clientHeight
-
-    let noteAnimationDistance = channelHeight + noteHeight
-    let noteAnimationTime = (noteScreenTravelTime * (noteAnimationDistance)) / channelHeight
-    divToAnimate.animate([
-            { transform: 'translateY(0px)'},
-            { transform: 'translateY(' + noteAnimationDistance + 'px)'}
-        ], {
-            duration: noteAnimationTime,
-            iterations: 1
-        }
-    )
-
+function populateNotesToPlay(song, gameSpeed) {
+    for(let i = 0; i < song.length; i++) {
+        notesToPlay.push(
+            {
+                note:     {
+                    note: song[i].note,
+                    notePlayedAt: song[i].notePlayedAt,
+                    duration:500
+                },
+                "noteId": i})
+    }
 }
+
+function animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime) {
+    notesToPlay.forEach((note) => {
+        setTimeout(() => {
+            let divToAnimate = document.querySelector('#note-' + note.noteId)
+            let channelHeight = document.querySelector('.piano-key-channel').clientHeight
+            let noteHeight = divToAnimate.clientHeight
+            let noteAnimationDistance = channelHeight + noteHeight
+            let noteAnimationTime = ((noteScreenTravelTime * noteAnimationDistance) / channelHeight) / gameSpeed
+
+            divToAnimate.animate([
+                    { transform: 'translateY(0px)'},
+                    { transform: 'translateY(' + noteAnimationDistance + 'px)'}
+                ], {
+                    duration: noteAnimationTime,
+                    iterations: 1
+                }
+            )
+        }, note.note.notePlayedAt / (gameSpeed ** 2))
+    })
+}
+
+function setNoteDivProperties(song, gameSpeed, noteScreenTravelTime) {
+    for(let i = 0; i < song.length; i++) {
+        let channel = document.querySelector('#channel-' + song[i].note)
+        let screenSizeAdjustmentFactor = noteScreenTravelTime / channel.clientHeight
+        let noteHeight = song[i].duration / (screenSizeAdjustmentFactor * gameSpeed)
+        let noteDiv = document.querySelector('#note-' + i)
+
+        noteDiv.style.height = noteHeight + 'px'
+        noteDiv.style.top = -noteHeight + 'px'
+    }
+}
+
 
 function turnOnKeyboard() {
     window.addEventListener('keydown' , (event) => {
@@ -556,25 +583,26 @@ function gameEngine(song) {
     let gameSpeed = 1 // multiplier to change game speed
     let noteScreenTravelTime = 2000 / gameSpeed // the time in ms for a note to travel down the screen
     let nextNoteToAnimate = 0
+
     let gameTimer = 0
+
     let playNoteWithinWindow = 400 // window in ms that the note can be played
-    loadSongIntoGame(song, gameSpeed)
+    loadSongIntoGame(song)
+    setNoteDivProperties(song, gameSpeed, noteScreenTravelTime)
+    populateNotesToPlay(song, gameSpeed)
+    animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
+    let songLength = notesToPlay[notesToPlay.length - 1].note.notePlayedAt + notesToPlay[notesToPlay.length - 1].note.duration + noteScreenTravelTime
+    let game = setInterval(() => {
+        console.log(songLength)
+        setNoteDivProperties(song, gameSpeed, noteScreenTravelTime)
+        console.log(gameSpeed)
+        populateNotesToPlay(song, gameSpeed)
+        animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
+        gameSpeed +=0.5
+    }, songLength)
 
-    let gameTime = setInterval(() => {
-        // limitation - can only serve one note at a time
-        if(notesToPlay[nextNoteToAnimate].note.notePlayedAt === gameTimer){
-            playNoteOnScreen(gameSpeed, noteScreenTravelTime, nextNoteToAnimate)
-            nextNoteToAnimate++
-        }
-        gameTimer += 100
-        console.log(gameTimer)
-        if(notesToPlay.length === nextNoteToAnimate){
-            console.log('song loop finished')
-            clearInterval(gameTime)
-        }
-    }, 100 / (gameSpeed**2) )
 
-    //for more loops, add more notes to gamestate
+
     // load songs and play songs 2nd time with increased game speed
     //on game over count how many notes played, or how many notes hit - duplicate info, no because you will have lives
 }
