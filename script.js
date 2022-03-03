@@ -496,7 +496,13 @@ function populateNotesArrays(song) {
                     duration:500
                 },
                 "noteId": i})
-        notesInChannels[song[i].note].push({"noteId": i})
+        notesInChannels[song[i].note].push(
+            {
+                note: song[i].note,
+                notePlayedAt: song[i].notePlayedAt,
+                duration:500,
+                "noteId": i
+            })
     }
 }
 
@@ -527,16 +533,24 @@ function setNoteDivProperties(song, gameSpeed, noteScreenTravelTime) {
         let screenSizeAdjustmentFactor = noteScreenTravelTime / channel.clientHeight
         let noteHeight = song[i].duration / (screenSizeAdjustmentFactor * gameSpeed)
         let noteDiv = document.querySelector('#note-' + i)
+        let noteColour = pianoKeys[song[i].note].colour
 
         noteDiv.style.height = noteHeight + 'px'
         noteDiv.style.top = -noteHeight + 'px'
+
+        console.log(noteColour)
+        if (noteColour === 'white') {
+            noteDiv.style.backgroundColor = '#ff0099'
+        } else if (noteColour === 'black') {
+            noteDiv.style.backgroundColor = '#1DB8DF'
+        }
     }
 }
 
 
-function turnOnKeyboard(notesPlaying, gameTimer) {
-    window.addEventListener('keydown' , (event) => {
-        event.preventDefault()
+function handleKeyboardEvent(event, notesPlaying, gameTimer, noteScreenTravelTime, gameLoop) { // could pass in some defaults so that this function can be used for normal playing as well as the game
+    event.preventDefault()
+    if(event.type === 'keydown') {
         if(Object.keys(keyBoardMapping).includes(event.code)) {
             let keyboardKey = keyBoardMapping[event.code]
             let pianoKey = pianoKeys[keyboardKey.note]
@@ -544,15 +558,28 @@ function turnOnKeyboard(notesPlaying, gameTimer) {
                 keyboardKey.pressed = true
                 notesPlaying[keyboardKey.note] = playNote(pianoKey.frequency)
                 document.querySelector('#' + keyboardKey.note).classList.add('depressedKey')
-                if(gameTimer === 1) { // check if time played here matches that of the note in the channel
-                    // if it does, mark note on screen tempoarily as as green
-                    // delete the note from the channel?
-                    console.log('miracle')
-                }
+
+
+                let note = notesInChannels[keyboardKey.note][0]
+                let notePlayedAt = (note.notePlayedAt + noteScreenTravelTime) * gameLoop
+                console.log('Note should be played at: ' + notePlayedAt)
+                console.log('Not actually played at: ' + gameTimer)
+
+
+
+
+                document.querySelector('#note-'+note.noteId).style.backgroundColor = 'green'
+                notesInChannels[keyboardKey.note].splice(0, 1)
+
+                // logs an error if nothing in that channel, not a problem as if noting in channel its a mistake (stop spamming of notes)
+                // next look up time note should be played at and compare against when key was pressed
+                //if(gameTimer - 200 <= ) {
+                //
+                //     console.log('miracle')
+                // }
             }
         }
-    })
-    window.addEventListener('keyup' , (event) => {
+    } else if (event.type === 'keyup') {
         event.preventDefault()
         if(Object.keys(keyBoardMapping).includes(event.code)){
             let keyboardKey = keyBoardMapping[event.code]
@@ -562,8 +589,7 @@ function turnOnKeyboard(notesPlaying, gameTimer) {
                 document.querySelector('#' + keyboardKey.note).classList.remove('depressedKey')
             }
         }
-
-    })
+    }
 }
 
 function detectNoteHit() {
@@ -578,17 +604,26 @@ function gameEngine(song,notesPlaying) {
     let gameSpeed = 1 // multiplier to change game speed
     let noteScreenTravelTime = 2000 / gameSpeed // the time in ms for a note to travel down the screen
     let nextNoteToAnimate = 0 // tracks progress through song
+    let gameLoop = 1
     let playNoteWithinWindow = 400 // window in ms that the note can be played
     let gameTimer = 0
     let playerLives = 1
 
-    turnOnKeyboard(notesPlaying, gameTimer)
+    window.addEventListener('keydown' , (event) => {
+        handleKeyboardEvent(event, notesPlaying, gameTimer, noteScreenTravelTime, gameLoop)
+    })
+
+    window.addEventListener('keyup' , (event) => {
+        handleKeyboardEvent(event, notesPlaying, gameTimer, noteScreenTravelTime, gameLoop)
+    })
+
+
+
+
+    //turnOnKeyboard(notesPlaying, gameTimer)
     loadSongIntoGame(song)
     setNoteDivProperties(song, gameSpeed, noteScreenTravelTime)
     populateNotesArrays(song)
-
-    console.log(notesInChannels)
-
 
     animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
     let songLength = notesToPlayArray[notesToPlayArray.length - 1].note.notePlayedAt + notesToPlayArray[notesToPlayArray.length - 1].note.duration + noteScreenTravelTime
@@ -597,6 +632,7 @@ function gameEngine(song,notesPlaying) {
         populateNotesArrays(song)
         animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
         gameSpeed +=0.1
+        gameLoop++
     }, songLength) // need this song length to dynamically update - due to scope, can't place function inside
 
     let gameTimeInterval = setInterval(() => {
@@ -604,8 +640,8 @@ function gameEngine(song,notesPlaying) {
             clearInterval(gameTimeInterval)
             clearInterval(game)
         }
+        //console.log(gameTimer)
         gameTimer += 100
-        console.log(gameTimer)
     },100)
 
 

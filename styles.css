@@ -213,13 +213,11 @@ h2 {
 }
 
 .white-note-target {
-    background-color: #ff0099;
     border-radius: 20px;
     width: 80%;
 }
 
 .black-note-target {
-    background-color: #1DB8DF;
     border-radius: 20px;
 }
 
