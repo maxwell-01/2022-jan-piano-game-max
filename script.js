@@ -423,7 +423,7 @@ const popcornSongNotes = [
 ]
 
 let results = [] // keeps track of all notes played and hit ratio, used to track lives lost and score
-let notesToPlay = [] // helps the program decide what note to play next
+let notesToPlayArray = [] // helps the program decide what note to play next
 let notesInChannels = {} // used to track hit markers and timing
 
 function createGameScreen() {
@@ -469,14 +469,8 @@ function createGameScreen() {
 //     }
 // ]
 
-let exmapleNotesToPlay = {
-    'g3' : [], // all the notes to play are in here in order they will be played
-    'a4' : []
-    // and so on...
-}
-
 function loadSongIntoGame(song) {
-    Object.keys(pianoKeys).forEach((key) => { //create notesToPlayArray
+    Object.keys(pianoKeys).forEach((key) => {
         notesInChannels[key] = []
     })
     for(let i = 0; i < song.length; i++) {
@@ -489,13 +483,12 @@ function loadSongIntoGame(song) {
             noteDiv = '<div class="target-note black-note-target" id="note-' + i + '"></div>'
         }
         channel.innerHTML += noteDiv
-        notesInChannels[song[i].note].push({"targetHit": null, "noteId": i})
     }
 }
 
-function populateNotesToPlay(song) {
+function populateNotesArrays(song) {
     for(let i = 0; i < song.length; i++) {
-        notesToPlay.push(
+        notesToPlayArray.push(
             {
                 note:     {
                     note: song[i].note,
@@ -503,11 +496,12 @@ function populateNotesToPlay(song) {
                     duration:500
                 },
                 "noteId": i})
+        notesInChannels[song[i].note].push({"noteId": i})
     }
 }
 
 function animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime) {
-    notesToPlay.forEach((note) => {
+    notesToPlayArray.forEach((note) => {
         setTimeout(() => {
             let divToAnimate = document.querySelector('#note-' + note.noteId)
             let channelHeight = document.querySelector('.piano-key-channel').clientHeight
@@ -540,7 +534,7 @@ function setNoteDivProperties(song, gameSpeed, noteScreenTravelTime) {
 }
 
 
-function turnOnKeyboard(notesPlaying) {
+function turnOnKeyboard(notesPlaying, gameTimer) {
     window.addEventListener('keydown' , (event) => {
         event.preventDefault()
         if(Object.keys(keyBoardMapping).includes(event.code)) {
@@ -550,6 +544,11 @@ function turnOnKeyboard(notesPlaying) {
                 keyboardKey.pressed = true
                 notesPlaying[keyboardKey.note] = playNote(pianoKey.frequency)
                 document.querySelector('#' + keyboardKey.note).classList.add('depressedKey')
+                if(gameTimer === 1) { // check if time played here matches that of the note in the channel
+                    // if it does, mark note on screen tempoarily as as green
+                    // delete the note from the channel?
+                    console.log('miracle')
+                }
             }
         }
     })
@@ -575,26 +574,39 @@ function detectNoteHit() {
     // need to think about what happens if a note is missed, get them hitting first then cross this bridge
 }
 
-function gameEngine(song) {
+function gameEngine(song,notesPlaying) {
     let gameSpeed = 1 // multiplier to change game speed
     let noteScreenTravelTime = 2000 / gameSpeed // the time in ms for a note to travel down the screen
     let nextNoteToAnimate = 0 // tracks progress through song
     let playNoteWithinWindow = 400 // window in ms that the note can be played
+    let gameTimer = 0
+    let playerLives = 1
 
+    turnOnKeyboard(notesPlaying, gameTimer)
     loadSongIntoGame(song)
     setNoteDivProperties(song, gameSpeed, noteScreenTravelTime)
-    populateNotesToPlay(song)
-    animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
-    let songLength = notesToPlay[notesToPlay.length - 1].note.notePlayedAt + notesToPlay[notesToPlay.length - 1].note.duration + noteScreenTravelTime
-    let game = setInterval(() => {
-        console.log(songLength)
-        setNoteDivProperties(song, gameSpeed, noteScreenTravelTime)
-        console.log(gameSpeed)
-        populateNotesToPlay(song)
-        animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
-        gameSpeed +=0.5
-    }, songLength)
+    populateNotesArrays(song)
 
+    console.log(notesInChannels)
+
+
+    animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
+    let songLength = notesToPlayArray[notesToPlayArray.length - 1].note.notePlayedAt + notesToPlayArray[notesToPlayArray.length - 1].note.duration + noteScreenTravelTime
+    let game = setInterval(() => {
+        setNoteDivProperties(song, gameSpeed, noteScreenTravelTime)
+        populateNotesArrays(song)
+        animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
+        gameSpeed +=0.1
+    }, songLength) // need this song length to dynamically update - due to scope, can't place function inside
+
+    let gameTimeInterval = setInterval(() => {
+        if(playerLives === 0) {
+            clearInterval(gameTimeInterval)
+            clearInterval(game)
+        }
+        gameTimer += 100
+        console.log(gameTimer)
+    },100)
 
 
     //on game over count how many notes played, or how many notes hit - duplicate info, no because you will have lives
@@ -616,8 +628,7 @@ function play() {
     let audioConnect;
     audioConnect = audioContext.createGain();
     audioConnect.connect(audioContext.destination);
-    turnOnKeyboard(notesPlaying)
-    gameEngine(song)
+    gameEngine(song, notesPlaying) // passing notesPlaying through as variable so that I can add an option to play the keyboard without notes flying
 }
 
 createGameScreen()
