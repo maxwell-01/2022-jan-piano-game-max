@@ -37,9 +37,6 @@ modalBlurredArea.addEventListener('click', () => {
     openCloseModal('.modal-blurred-area', '.instruction-modal', false)
 })
 
-let notesPlaying = {}; // used to hold currently playing note objects
-let pianoKeyContainer = document.querySelector('.piano-key-container')
-
 const pianoKeys = {
     'g3' : {
         colour: 'white',
@@ -425,9 +422,9 @@ const popcornSongNotes = [
     // }
 ]
 
-let results = [] // keeps track of all notes played and hit ratio, used to track lives lost
+let results = [] // keeps track of all notes played and hit ratio, used to track lives lost and score
 let notesToPlay = [] // helps the program decide what note to play next
-let notesInChannels = {} // puts all notes in the correct channels - used for timing
+let notesInChannels = {} // used to track hit markers and timing
 
 function createGameScreen() {
     let pianoKeyContainer = document.querySelector('.piano-key-container')
@@ -483,21 +480,20 @@ function loadSongIntoGame(song) {
         notesInChannels[key] = []
     })
     for(let i = 0; i < song.length; i++) {
-        let songNote = song[i]
-        let pianoKey = pianoKeys[songNote.note]
-        notesInChannels[song[i].note].push({"targetHit": null, "noteId": i})
+        let pianoKey = pianoKeys[song[i].note]
         let channel = document.querySelector('#channel-' + song[i].note)
         let noteDiv
         if(pianoKey.colour === 'white'){
-            noteDiv = '<div class="target-note white-note-target" id="note-' + i + '"></div>' //  style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"
+            noteDiv = '<div class="target-note white-note-target" id="note-' + i + '"></div>'
         } else if(pianoKey.colour === 'black'){
-            noteDiv = '<div class="target-note black-note-target" id="note-' + i + '"></div>' // style="height:' + noteHeight + 'px; top:-' + noteHeight +'px;"
+            noteDiv = '<div class="target-note black-note-target" id="note-' + i + '"></div>'
         }
         channel.innerHTML += noteDiv
+        notesInChannels[song[i].note].push({"targetHit": null, "noteId": i})
     }
 }
 
-function populateNotesToPlay(song, gameSpeed) {
+function populateNotesToPlay(song) {
     for(let i = 0; i < song.length; i++) {
         notesToPlay.push(
             {
@@ -544,7 +540,7 @@ function setNoteDivProperties(song, gameSpeed, noteScreenTravelTime) {
 }
 
 
-function turnOnKeyboard() {
+function turnOnKeyboard(notesPlaying) {
     window.addEventListener('keydown' , (event) => {
         event.preventDefault()
         if(Object.keys(keyBoardMapping).includes(event.code)) {
@@ -582,28 +578,25 @@ function detectNoteHit() {
 function gameEngine(song) {
     let gameSpeed = 1 // multiplier to change game speed
     let noteScreenTravelTime = 2000 / gameSpeed // the time in ms for a note to travel down the screen
-    let nextNoteToAnimate = 0
-
-    let gameTimer = 0
-
+    let nextNoteToAnimate = 0 // tracks progress through song
     let playNoteWithinWindow = 400 // window in ms that the note can be played
+
     loadSongIntoGame(song)
     setNoteDivProperties(song, gameSpeed, noteScreenTravelTime)
-    populateNotesToPlay(song, gameSpeed)
+    populateNotesToPlay(song)
     animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
     let songLength = notesToPlay[notesToPlay.length - 1].note.notePlayedAt + notesToPlay[notesToPlay.length - 1].note.duration + noteScreenTravelTime
     let game = setInterval(() => {
         console.log(songLength)
         setNoteDivProperties(song, gameSpeed, noteScreenTravelTime)
         console.log(gameSpeed)
-        populateNotesToPlay(song, gameSpeed)
+        populateNotesToPlay(song)
         animateNotes(nextNoteToAnimate, gameSpeed, noteScreenTravelTime)
         gameSpeed +=0.5
     }, songLength)
 
 
 
-    // load songs and play songs 2nd time with increased game speed
     //on game over count how many notes played, or how many notes hit - duplicate info, no because you will have lives
 }
 
@@ -623,7 +616,7 @@ function play() {
     let audioConnect;
     audioConnect = audioContext.createGain();
     audioConnect.connect(audioContext.destination);
-    turnOnKeyboard()
+    turnOnKeyboard(notesPlaying)
     gameEngine(song)
 }
 
