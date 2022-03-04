@@ -2,16 +2,6 @@ body {
     width: 100%;
     background-color: #000000;
 }
-.full-screen-game {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    background-color: #000000;
-    margin: 10px;
-}
-
 header {
     text-align: center;
     font-size: 1rem;
@@ -34,132 +24,79 @@ main {
     margin: 20px 0;
 }
 
-.modal-overlay-start {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 9999;
-    width: 100%;
-    height: 100%;
-    padding-top: 100px;
-    background-color: black;
-    background-color: rgba(0, 0, 0, 0.6);
-}
-
-.start-game-modal {
-    background-color: #000000;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    top: 135px;
-    margin: auto;
-    padding: 20px;
-    max-width: 450px;
-    height: 250px;
-    color: #ffffff;
-    border-radius: 10px;
-    font-size: 1rem;
-    box-shadow: 5px 5px 5px #ff0099;
-}
-
-.start-game-heading {
-    text-align: center;
-    color: #ff0099;
-    margin-bottom: 15px;
-}
-
-.start-game-content {
-    text-align: center;
-    flex-direction: column;
-    font-size: 1.25rem;
-}
-
-#start-game-button {
-    text-transform: uppercase;
-    font-size: 2rem;
-    background-color: white;
-    font-weight: bold;
-    color: #ff0099;
-    text-shadow: 4px 4px 4px #ff0099;
-    border-radius: 5px;
-    padding: 10px;
-}
-
-#start-game-button:hover {
-    background-color: #ff0099;
-    color: #ffffff;
-    box-shadow: 3px 3px 3px #1DB8DF;
-}
-
-.modal-blurred-area {
-    display: none;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 9999;
-    width: 100%;
-    height: 100%;
-    padding-top: 100px;
-    background-color: rgba(0, 0, 0, 0.8);
-    -webkit-transition: 0.5s;
-    overflow: auto;
-    transition: all 0.3s linear;
-}
-
-.instruction-modal {
-    background-color: #000000;
-    position: relative;
-    top: 135px;
-    margin: auto;
-    padding: 40px;
-    max-width: 450px;
-    height: 250px;
-    color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 5px 5px 5px #ff0099;
-    font-size: 1rem;
-}
-
-.instruction-modal p {
-    font-size: 1rem;
-}
-
-.instruction-modal li {
-    font-size: 1rem;
-}
-
-#modal-button {
-    position: relative;
-    left: 400px;
-    bottom: 30px;
-    color: #ff0099;
-}
-
-#modal-button:hover {
-    background-color: #ff0099;
-    color: #ffffff;
-    box-shadow: 3px 3px 3px #1DB8DF;
-    position: absolute;
-    top: 20px;
-    right: 30px;
-}
-
 h2 {
 
     font-size: 1.5rem;
     padding-bottom: 10px;
 }
 
-.instruction-modal p {
-    margin: 0;
+.full-screen-game {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    background-color: #000000;
+    margin: 10px;
 }
 
-.remove-bullet-point {
-    list-style-type: none;
+.modal-background {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
 }
 
-#instruction-button {
+.modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 25vh;
+    margin: auto;
+    padding: 20px;
+    max-width: 450px;
+    border-style: double;
+    border-radius: 10px;
+    font-size: 1rem;
+    background-color: #000000;
+    box-shadow: 5px 5px 5px #ff0099;
+    color: #ff0099;
+}
+
+.modal-heading {
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.modal-text {
+    text-align: center;
+    font-size: 1.25rem;
+    color: #ffffff;
+}
+
+.modal-button {
+    text-transform: uppercase;
+    font-size: 2rem;
+    background-color: #ffffff;
+    font-weight: bold;
+    color: #ff0099;
+    text-shadow: 4px 4px 4px #ff0099;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.modal-button:hover {
+    background-color: #ff0099;
+    color: #ffffff;
+    box-shadow: 3px 3px 3px #1DB8DF;
+}
+
+#instructions-button {
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -173,13 +110,13 @@ h2 {
     color: #ff0099;
 }
 
-#instruction-button:hover {
+#instructions-button:hover {
     background-color: #ff0099;
     color: #ffffff;
     box-shadow: 3px 3px 3px #1DB8DF;
 }
 
-#instruction-button:active {
+#instructions-button:active {
     box-shadow: 0 5px #1DB8DF;
     transform: translateY(4px);
 }
@@ -197,7 +134,6 @@ h2 {
 
 .game-notes-container {
     display: flex;
-    border: black 1px solid;
     flex-grow: 5;
     padding: 0 20px;
     width: 100%;
@@ -278,6 +214,11 @@ h2 {
     position: relative;
 }
 
+.depressedKey {
+    box-shadow: 5px 20px 5px #64e30b;
+    background-color: #64e30b;
+}
+
 footer {
     display: flex;
     justify-content: center;
@@ -303,9 +244,4 @@ footer a {
 
 footer a:hover {
     color: #ffffff;
-}
-
-.depressedKey {
-    box-shadow: 5px 20px 5px #64e30b;
-    background-color: #64e30b;
 }

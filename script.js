@@ -1,41 +1,247 @@
-function openCloseModal(modalOverlay, modalBody, isModalOpen) {
-    if(isModalOpen === false) {
-        document.querySelector(modalOverlay).style.display = 'none'
-        document.querySelector(modalBody).style.display = 'none'
-    } else if(isModalOpen === true) {
-        document.querySelector(modalOverlay).style.display = 'block'
-        document.querySelector(modalBody).style.display = 'block'
-    }
+let createStartGameModal = () => {
+    let modalContainer = document.querySelector('.modal-container')
+    modalContainer.innerHTML =
+        '<div class="modal">' +
+        '   <h2 class="modal-heading">Welcome to Piano Plinky Plonk!</h2>' +
+        '   <p class="modal-text">The game for aspiring musicians everywhere</p>' +
+        '   <button class="button-click-listener" id="instructions-button">i</button>' +
+        '   <button class="modal-button button-click-listener" id="start-game-button">Start</button>' +
+        '</div>'
+    handleModalClicks()
 }
 
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-audioConnect = audioContext.createGain();
-audioConnect.connect(audioContext.destination);
+let instructionsModal = () => {
+    let modalContainer = document.querySelector('.modal-container')
+    modalContainer.innerHTML =
+        '<div class="modal">\n' +
+        '    <h2 class="modal-heading">Instructions</h2>' +
+        '    <p class="modal-text">Welcome to Piano Plinky Plonk, the interactive web-piano that allows you to play your own tunes!</p>\n' +
+        '    <p class="modal-text">To get started:</p>\n' +
+        '    <ol>\n' +
+        '        <li class="modal-text">using your keyboard, tap the corresponding keys to play notes</li>\n' +
+        '        <li class="modal-text">\'A\' to \'↵\' are the white piano keys</li>\n' +
+        '        <li class="modal-text">\'W\' to \']\' are the black piano keys</li>\n' +
+        '    </ol>\n' +
+        '    <button class="modal-button button-click-listener" id="close-instructions-button">Back</button>' +
+        '</div>'
+    handleModalClicks()
+}
 
-let hideGameStartModal = document.querySelector('#start-game-button')
-let showInstructionsButton = document.querySelector('#instruction-button')
-let hideInstructionsModal = document.querySelector('#modal-button')
-let instructionsModal = document.querySelector('.instruction-modal')
-let modalBlurredArea = document.querySelector('.modal-blurred-area')
+let handleModalClicks = () => {
+    let modalButtons = document.querySelectorAll('.button-click-listener')
+    modalButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation()
+            switch(event.target.id) {
+                case 'start-game-button':
+                    document.querySelector('.modal-background').style.display = 'none'
+                    play()
+                    break;
+                case 'instructions-button':
+                    instructionsModal()
+                    break;
+                case 'close-instructions-button':
+                    createStartGameModal()
+                    break;
+                default:
+                    console.log('default triggered')
+            }
+        })
+    })
+}
 
-instructionsModal.addEventListener('click', (event) => {
-    event.stopPropagation()
-})
+function createGameScreen() {
+    let pianoKeyContainer = document.querySelector('.piano-key-container')
+    let gameNotesContainer = document.querySelector('.game-notes-container')
+    Object.keys(keyBoardMapping).forEach((keyCode) => {
+        let keyboardKey = keyBoardMapping[keyCode]
+        let pianoKey = pianoKeys[keyboardKey.note]
 
-hideGameStartModal.addEventListener('click', (event) => {
-    event.stopPropagation()
-    openCloseModal('.modal-overlay-start', '.start-game-modal', false)
-    play()
-})
-showInstructionsButton.addEventListener('click', () => {
-    openCloseModal('.modal-blurred-area', '.instruction-modal', true)
-})
-hideInstructionsModal.addEventListener('click', () => {
-    openCloseModal('.modal-blurred-area', '.instruction-modal', false)
-})
-modalBlurredArea.addEventListener('click', () => {
-    openCloseModal('.modal-blurred-area', '.instruction-modal', false)
-})
+        if(pianoKey.colour === 'white') {
+            pianoKeyContainer.innerHTML +=
+                '<div id="' + keyboardKey.note + '" class="piano-key white-key" data-id="' + keyboardKey.note + '">\n' +
+                '   <p>' + keyboardKey.label + '</p>\n' +
+                '</div>'
+            gameNotesContainer.innerHTML +=
+                '<div class="piano-key-channel white-key-channel" id="channel-' + keyboardKey.note + '">\n' +
+                '</div>'
+        } else if(pianoKey.colour === 'black') {
+            let parentWhiteKeyDiv = document.querySelector('#' + pianoKey.parentKey )
+            let newContent =
+                '<div id="' + keyboardKey.note + '" class="piano-key black-key" data-note="' + keyboardKey.note + '">\n' +
+                '   <p>' + keyboardKey.label + '</p>\n' +
+                '</div>\n' + parentWhiteKeyDiv.innerHTML
+            parentWhiteKeyDiv.innerHTML = newContent
+            let parentWhiteChannel = document.querySelector('#channel-' + pianoKey.parentKey)
+            parentWhiteChannel.innerHTML +=
+                '<div class="piano-key-channel black-key-channel" id="channel-' + keyboardKey.note + '">\n' +
+                '</div>'
+        }
+    })
+}
+function play() {
+    let song = popcornSongNotes
+    let notesPlaying = {};
+    // could add a free play mode and activate the keyboard here
+    runGame(song, notesPlaying) // passing notesPlaying through as variable so that I can add an option to play the keyboard without notes flying
+}
+function runGame(song,notesPlaying) { // somewhere, something isn't being passed through as setting game speed manually works, but not when the program increments itself.
+    gameState.gameStartTime = new Date()
+    createNoteDivs(song)
+    populateNotesAndChannelArrays(song)
+    playSongOnLoop(song)
+
+    window.addEventListener('keydown' , (event) => {
+        let keyboardKey = handleKeyboardEvent(event, notesPlaying)
+        detectNoteHit(keyboardKey)
+    })
+    window.addEventListener('keyup' , (event) => {
+        handleKeyboardEvent(event, notesPlaying)
+    })
+
+    //on game over count how many notes
+    // played, or how many notes hit - duplicate info, no because you will have lives
+}
+function createNoteDivs(song) {
+    for(let i = 0; i < song.length; i++) {
+        let pianoKey = pianoKeys[song[i].note]
+        let channel = document.querySelector('#channel-' + song[i].note)
+        let noteDiv
+        if(pianoKey.colour === 'white'){
+            noteDiv = '<div class="target-note white-note-target" id="note-' + i + '"></div>'
+        } else if(pianoKey.colour === 'black'){
+            noteDiv = '<div class="target-note black-note-target" id="note-' + i + '"></div>'
+        }
+        channel.innerHTML += noteDiv
+    }
+}
+function populateNotesAndChannelArrays(song) {
+    notesInChannels = {}
+    notesToPlayArray = []
+    for(let i = 0; i < song.length; i++) {
+        notesToPlayArray.push(
+            {
+                note: song[i].note,
+                notePlayedAt: song[i].notePlayedAt / gameState.gameSpeed,
+                duration: song[i].duration / gameState.gameSpeed,
+                "noteId": i})
+        if(typeof notesInChannels[song[i].note] === "undefined") {notesInChannels[song[i].note] = []}
+        notesInChannels[song[i].note].push(
+            {
+                note: song[i].note,
+                notePlayedAt: song[i].notePlayedAt,
+                duration: 500,
+                "noteId": i
+            })
+    }
+}
+function playSongOnLoop(song) {
+    function loopGameSong(songLength) {
+        setTimeout(() => {
+            gameState.gameSpeed += gameState.gameSpeedIncreaseIncrement
+            populateNotesAndChannelArrays(song, gameState)
+            setNoteDivProperties(song, gameState)
+            animateNotes(gameState)
+            let lastNote = notesToPlayArray[notesToPlayArray.length - 1]
+            let songLengthTimer = (lastNote.notePlayedAt + lastNote.duration + gameState.noteScreenTravelTime) / gameState.gameSpeed
+            gameState.songLength = songLengthTimer
+            gameState.gameLoop++
+            loopGameSong(songLengthTimer)
+        },songLength)
+    }
+    loopGameSong(0)
+}
+function setNoteDivProperties(song) {
+    for(let i = 0; i < song.length; i++) {
+        let channel = document.querySelector('#channel-' + song[i].note)
+        let screenSizeAdjustmentFactor = gameState.noteScreenTravelTime / channel.clientHeight
+        let noteHeight = notesToPlayArray[i].duration / (screenSizeAdjustmentFactor)
+        let noteDiv = document.querySelector('#note-' + i)
+        let noteColour = pianoKeys[song[i].note].colour
+
+        noteDiv.style.height = noteHeight + 'px'
+        noteDiv.style.top = -noteHeight + 'px'
+
+        if (noteColour === 'white') {
+            noteDiv.style.backgroundColor = '#ff0099'
+        } else if (noteColour === 'black') {
+            noteDiv.style.backgroundColor = '#1DB8DF'
+        }
+    }
+}
+function animateNotes() {
+    notesToPlayArray.forEach((note) => {
+        setTimeout(() => {
+            let divToAnimate = document.querySelector('#note-' + note.noteId)
+            let channelHeight = document.querySelector('.piano-key-channel').clientHeight
+            let noteHeight = divToAnimate.clientHeight
+            let noteAnimationDistance = channelHeight + noteHeight
+            let noteAnimationTime = ((gameState.noteScreenTravelTime / gameState.gameSpeed) * noteAnimationDistance) / channelHeight
+
+            divToAnimate.animate([
+                    { transform: 'translateY(0px)'},
+                    { transform: 'translateY(' + noteAnimationDistance + 'px)'}
+                ], {
+                    duration: noteAnimationTime,
+                    iterations: 1
+                }
+            )
+        }, note.notePlayedAt / gameState.gameSpeed )
+    })
+}
+function handleKeyboardEvent(event, notesPlaying) {
+    event.preventDefault()
+    if(Object.keys(keyBoardMapping).includes(event.code)) {
+        let keyboardKey = keyBoardMapping[event.code]
+        if (event.type === 'keydown') {
+            let pianoKey = pianoKeys[keyboardKey.note]
+            if (keyboardKey.pressed === false) {
+                keyboardKey.pressed = true
+                notesPlaying[keyboardKey.note] = playNote(pianoKey.frequency)
+                document.querySelector('#' + keyboardKey.note).classList.add('depressedKey')
+            }
+        } else if (event.type === 'keyup') {
+            if (keyboardKey.pressed === true) {
+                keyboardKey.pressed = false
+                notesPlaying[keyboardKey.note].stop()
+                document.querySelector('#' + keyboardKey.note).classList.remove('depressedKey')
+            }
+        }
+        return keyboardKey
+    }
+}
+function playNote(frequency) {
+    let sound = audioContext.createOscillator()
+    sound.connect(audioConnect)
+    sound.type = 'sine'
+    sound.frequency.value = frequency
+    sound.start()
+    return sound
+}
+function detectNoteHit(keyboardKey) {
+    if(typeof notesInChannels[keyboardKey.note][0] != "undefined") {
+        let note = notesInChannels[keyboardKey.note][0]
+        let noteShouldBePlayed = (note.notePlayedAt + (gameState.noteScreenTravelTime / gameState.gameSpeed)) + (gameState.songLength * (gameState.gameLoop - 1))
+        let noteActuallyPlayed = new Date() - gameState.gameStartTime
+
+
+        console.log('Note should be played at: ' + noteShouldBePlayed)
+        console.log('Not actually played at: ' + noteActuallyPlayed)
+
+        console.log('noteScreenTravelTime = ' + gameState.noteScreenTravelTime)
+        console.log('gameSpeed = ' + gameState.gameSpeed)
+        console.log('songLength = ' + gameState.songLength)
+        console.log('gameLoop = ' + gameState.gameLoop)
+
+        document.querySelector('#note-'+note.noteId).style.backgroundColor = 'green'
+        notesInChannels[keyboardKey.note].splice(0, 1)
+    }
+
+    // create array of the channels, put the notes to be played into each channel with the time they should be played
+    // pass game timer into keyboard event listener so it can compare
+    //when a note is hit, remove it from the front of this 'queue' (slice -1 it off)
+    // need to think about what happens if a note is missed, get them hitting first then cross this bridge
+}
 
 const pianoKeys = {
     'g3' : {
@@ -422,6 +628,9 @@ const popcornSongNotes = [
     // }
 ]
 
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let audioConnect = audioContext.createGain();
+audioConnect.connect(audioContext.destination);
 let gameState = {
     'gameSpeed' : 2, // multiplier to change game speed
     'gameSpeedIncreaseIncrement' : 0,
@@ -438,203 +647,5 @@ let results = [] // keeps track of all notes played and hit ratio, used to track
 let notesToPlayArray = [] // helps the program decide what note to play next
 let notesInChannels = {} // used to track hit markers and timing
 
-function createGameScreen() {
-    let pianoKeyContainer = document.querySelector('.piano-key-container')
-    let gameNotesContainer = document.querySelector('.game-notes-container')
-    Object.keys(keyBoardMapping).forEach((keyCode) => {
-        let keyboardKey = keyBoardMapping[keyCode]
-        let pianoKey = pianoKeys[keyboardKey.note]
-
-        if(pianoKey.colour === 'white') {
-            pianoKeyContainer.innerHTML +=
-                '<div id="' + keyboardKey.note + '" class="piano-key white-key" data-id="' + keyboardKey.note + '">\n' +
-                '   <p>' + keyboardKey.label + '</p>\n' +
-                '</div>'
-            gameNotesContainer.innerHTML +=
-                '<div class="piano-key-channel white-key-channel" id="channel-' + keyboardKey.note + '">\n' +
-                '</div>'
-        } else if(pianoKey.colour === 'black') {
-            let parentWhiteKeyDiv = document.querySelector('#' + pianoKey.parentKey )
-            let newContent =
-                '<div id="' + keyboardKey.note + '" class="piano-key black-key" data-note="' + keyboardKey.note + '">\n' +
-                '   <p>' + keyboardKey.label + '</p>\n' +
-                '</div>\n' + parentWhiteKeyDiv.innerHTML
-            parentWhiteKeyDiv.innerHTML = newContent
-            let parentWhiteChannel = document.querySelector('#channel-' + pianoKey.parentKey)
-            parentWhiteChannel.innerHTML +=
-                '<div class="piano-key-channel black-key-channel" id="channel-' + keyboardKey.note + '">\n' +
-                '</div>'
-        }
-    })
-}
-function createNoteDivs(song) {
-    for(let i = 0; i < song.length; i++) {
-        let pianoKey = pianoKeys[song[i].note]
-        let channel = document.querySelector('#channel-' + song[i].note)
-        let noteDiv
-        if(pianoKey.colour === 'white'){
-            noteDiv = '<div class="target-note white-note-target" id="note-' + i + '"></div>'
-        } else if(pianoKey.colour === 'black'){
-            noteDiv = '<div class="target-note black-note-target" id="note-' + i + '"></div>'
-        }
-        channel.innerHTML += noteDiv
-    }
-}
-function populateNotesAndChannelArrays(song) {
-    notesInChannels = {}
-    notesToPlayArray = []
-    for(let i = 0; i < song.length; i++) {
-        notesToPlayArray.push(
-            {
-                note: song[i].note,
-                notePlayedAt: song[i].notePlayedAt / gameState.gameSpeed,
-                duration: song[i].duration / gameState.gameSpeed,
-                "noteId": i})
-        if(typeof notesInChannels[song[i].note] === "undefined") {notesInChannels[song[i].note] = []}
-        notesInChannels[song[i].note].push(
-            {
-                note: song[i].note,
-                notePlayedAt: song[i].notePlayedAt,
-                duration: 500,
-                "noteId": i
-            })
-    }
-}
-function animateNotes() {
-    notesToPlayArray.forEach((note) => {
-        setTimeout(() => {
-            let divToAnimate = document.querySelector('#note-' + note.noteId)
-            let channelHeight = document.querySelector('.piano-key-channel').clientHeight
-            let noteHeight = divToAnimate.clientHeight
-            let noteAnimationDistance = channelHeight + noteHeight
-            let noteAnimationTime = ((gameState.noteScreenTravelTime / gameState.gameSpeed) * noteAnimationDistance) / channelHeight
-
-            divToAnimate.animate([
-                    { transform: 'translateY(0px)'},
-                    { transform: 'translateY(' + noteAnimationDistance + 'px)'}
-                ], {
-                    duration: noteAnimationTime,
-                    iterations: 1
-                }
-            )
-        }, note.notePlayedAt / gameState.gameSpeed )
-    })
-}
-function setNoteDivProperties(song) {
-    for(let i = 0; i < song.length; i++) {
-        let channel = document.querySelector('#channel-' + song[i].note)
-        let screenSizeAdjustmentFactor = gameState.noteScreenTravelTime / channel.clientHeight
-        let noteHeight = notesToPlayArray[i].duration / (screenSizeAdjustmentFactor)
-        let noteDiv = document.querySelector('#note-' + i)
-        let noteColour = pianoKeys[song[i].note].colour
-
-        noteDiv.style.height = noteHeight + 'px'
-        noteDiv.style.top = -noteHeight + 'px'
-
-        if (noteColour === 'white') {
-            noteDiv.style.backgroundColor = '#ff0099'
-        } else if (noteColour === 'black') {
-            noteDiv.style.backgroundColor = '#1DB8DF'
-        }
-    }
-}
-
-function playSongOnLoop(song) {
-   function loopGameSong(songLength) {
-        setTimeout(() => {
-            gameState.gameSpeed += gameState.gameSpeedIncreaseIncrement
-            populateNotesAndChannelArrays(song, gameState)
-            setNoteDivProperties(song, gameState)
-            animateNotes(gameState)
-            let lastNote = notesToPlayArray[notesToPlayArray.length - 1]
-            let songLengthTimer = (lastNote.notePlayedAt + lastNote.duration + gameState.noteScreenTravelTime) / gameState.gameSpeed
-            gameState.songLength = songLengthTimer
-            gameState.gameLoop++
-            loopGameSong(songLengthTimer)
-        },songLength)
-    }
-    loopGameSong(0)
-}
-
-function handleKeyboardEvent(event, notesPlaying) {
-    event.preventDefault()
-    if(Object.keys(keyBoardMapping).includes(event.code)) {
-        let keyboardKey = keyBoardMapping[event.code]
-        if (event.type === 'keydown') {
-            let pianoKey = pianoKeys[keyboardKey.note]
-            if (keyboardKey.pressed === false) {
-                keyboardKey.pressed = true
-                notesPlaying[keyboardKey.note] = playNote(pianoKey.frequency)
-                document.querySelector('#' + keyboardKey.note).classList.add('depressedKey')
-            }
-        } else if (event.type === 'keyup') {
-            if (keyboardKey.pressed === true) {
-                keyboardKey.pressed = false
-                notesPlaying[keyboardKey.note].stop()
-                document.querySelector('#' + keyboardKey.note).classList.remove('depressedKey')
-            }
-        }
-        return keyboardKey
-    }
-}
-
-function detectNoteHit(keyboardKey) {
-    if(typeof notesInChannels[keyboardKey.note][0] != "undefined") {
-        let note = notesInChannels[keyboardKey.note][0]
-        let noteShouldBePlayed = (note.notePlayedAt + (gameState.noteScreenTravelTime / gameState.gameSpeed)) + (gameState.songLength * (gameState.gameLoop - 1))
-        let noteActuallyPlayed = new Date() - gameState.gameStartTime
-
-        //console.log(gameState.gameLoop)
-
-        console.log('Note should be played at: ' + noteShouldBePlayed)
-        console.log('Not actually played at: ' + noteActuallyPlayed)
-
-        console.log('noteScreenTravelTime = ' + gameState.noteScreenTravelTime)
-        console.log('gameSpeed = ' + gameState.gameSpeed)
-        console.log('songLength = ' + gameState.songLength)
-        console.log('gameLoop = ' + gameState.gameLoop)
-
-        document.querySelector('#note-'+note.noteId).style.backgroundColor = 'green'
-        notesInChannels[keyboardKey.note].splice(0, 1)
-    }
-
-    // create array of the channels, put the notes to be played into each channel with the time they should be played
-    // pass game timer into keyboard event listener so it can compare
-    //when a note is hit, remove it from the front of this 'queue' (slice -1 it off)
-    // need to think about what happens if a note is missed, get them hitting first then cross this bridge
-}
-
-function gameEngine(song,notesPlaying) { // somewhere, something isn't being passed through as setting game speed manually works, but not when the program increments itself.
-    gameState.gameStartTime = new Date()
-    createNoteDivs(song)
-    populateNotesAndChannelArrays(song)
-    playSongOnLoop(song)
-
-    window.addEventListener('keydown' , (event) => {
-        let keyboardKey = handleKeyboardEvent(event, notesPlaying)
-        detectNoteHit(keyboardKey)
-    })
-    window.addEventListener('keyup' , (event) => {
-        handleKeyboardEvent(event, notesPlaying)
-    })
-
-    //on game over count how many notes played, or how many notes hit - duplicate info, no because you will have lives
-}
-
-function playNote(frequency) {
-    let sound = audioContext.createOscillator()
-    sound.connect(audioConnect)
-    sound.type = 'sine'
-    sound.frequency.value = frequency
-    sound.start()
-    return sound
-}
-
-function play() {
-    let song = popcornSongNotes
-    let notesPlaying = {};
-    // could add a free play mode and activate the keyboard here
-    gameEngine(song, notesPlaying) // passing notesPlaying through as variable so that I can add an option to play the keyboard without notes flying
-}
-
+createStartGameModal()
 createGameScreen()
