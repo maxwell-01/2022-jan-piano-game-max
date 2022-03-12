@@ -18,6 +18,7 @@
 <div class="full-screen-game">
     <header>
         <h1>Piano Plinky Plonk</h1>
+        <button class="modal-button button-click-listener" id="main-menu-button">Main Menu</button>
     </header>
     <main>
         <div class="modal-background">

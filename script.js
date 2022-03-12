@@ -1,62 +1,9 @@
-let createStartGameModal = () => {
-    let modalContainer = document.querySelector('.modal-container')
-    modalContainer.innerHTML =
-        '<div class="modal">' +
-        '   <h2 class="modal-heading">Welcome to Piano Plinky Plonk!</h2>' +
-        '   <p class="modal-text">The game for aspiring musicians everywhere</p>' +
-        '   <button class="button-click-listener" id="instructions-button">i</button>' +
-        '   <button class="modal-button button-click-listener" id="start-game-button">Start</button>' +
-        '</div>'
-    handleModalClicks()
-}
-
-let instructionsModal = () => {
-    let modalContainer = document.querySelector('.modal-container')
-    modalContainer.innerHTML =
-        '<div class="modal">\n' +
-        '    <h2 class="modal-heading">Instructions</h2>' +
-        '    <p class="modal-text">Welcome to Piano Plinky Plonk, the interactive web-piano that allows you to play your own tunes!</p>\n' +
-        '    <p class="modal-text">To get started:</p>\n' +
-        '    <ol>\n' +
-        '        <li class="modal-text">using your keyboard, tap the corresponding keys to play notes</li>\n' +
-        '        <li class="modal-text">\'A\' to \'↵\' are the white piano keys</li>\n' +
-        '        <li class="modal-text">\'W\' to \']\' are the black piano keys</li>\n' +
-        '    </ol>\n' +
-        '    <button class="modal-button button-click-listener" id="close-instructions-button">Back</button>' +
-        '</div>'
-    handleModalClicks()
-}
-
-let handleModalClicks = () => {
-    let modalButtons = document.querySelectorAll('.button-click-listener')
-    modalButtons.forEach((button) => {
-        button.addEventListener('click', (event) => {
-            event.stopPropagation()
-            switch(event.target.id) {
-                case 'start-game-button':
-                    document.querySelector('.modal-background').style.display = 'none'
-                    play()
-                    break;
-                case 'instructions-button':
-                    instructionsModal()
-                    break;
-                case 'close-instructions-button':
-                    createStartGameModal()
-                    break;
-                default:
-                    console.log('default triggered')
-            }
-        })
-    })
-}
-
-function createGameScreen() {
+function createGameScreen(pianoKeys, keyBoardMapping) {
     let pianoKeyContainer = document.querySelector('.piano-key-container')
     let gameNotesContainer = document.querySelector('.game-notes-container')
     Object.keys(keyBoardMapping).forEach((keyCode) => {
         let keyboardKey = keyBoardMapping[keyCode]
         let pianoKey = pianoKeys[keyboardKey.note]
-
         if(pianoKey.colour === 'white') {
             pianoKeyContainer.innerHTML +=
                 '<div id="' + keyboardKey.note + '" class="piano-key white-key" data-id="' + keyboardKey.note + '">\n' +
@@ -79,30 +26,248 @@ function createGameScreen() {
         }
     })
 }
-function play() {
-    let song = popcornSongNotes
-    let notesPlaying = {};
-    // could add a free play mode and activate the keyboard here
-    runGame(song, notesPlaying) // passing notesPlaying through as variable so that I can add an option to play the keyboard without notes flying
+let createStartGameModal = () => {
+    let modalContainer = document.querySelector('.modal-container')
+    modalContainer.innerHTML =
+        '<div class="modal">' +
+        '   <h2 class="modal-heading">Welcome to Piano Plinky Plonk!</h2>' +
+        '   <p class="modal-text">The game for aspiring musicians everywhere</p>' +
+        '   <button class="button-click-listener" id="instructions-button">i</button>' +
+        '   <button class="modal-button button-click-listener" id="start-game-button">Start game</button>' +
+        '   <button class="modal-button button-click-listener" id="free-play-button">Free play</button>' +
+        '</div>'
+    handleModalClicks()
 }
-function runGame(song,notesPlaying) { // somewhere, something isn't being passed through as setting game speed manually works, but not when the program increments itself.
+let instructionsModal = () => {
+    let modalContainer = document.querySelector('.modal-container')
+    modalContainer.innerHTML =
+        '<div class="modal">\n' +
+        '    <h2 class="modal-heading">Instructions</h2>' +
+        '    <p class="modal-text">Welcome to Piano Plinky Plonk, the interactive web-piano that allows you to play your own tunes!</p>\n' +
+        '    <p class="modal-text">To get started:</p>\n' +
+        '    <ol>\n' +
+        '        <li class="modal-text">using your keyboard, tap the corresponding keys to play notes</li>\n' +
+        '        <li class="modal-text">\'A\' to \'↵\' are the white piano keys</li>\n' +
+        '        <li class="modal-text">\'W\' to \']\' are the black piano keys</li>\n' +
+        '    </ol>\n' +
+        '    <button class="modal-button button-click-listener" id="close-instructions-button">Back</button>' +
+        '</div>'
+    handleModalClicks()
+}
+let handleModalClicks = (gameState) => {
+    const htmlButtonMapping = {
+        'start-game-button' : () => {
+            document.querySelector('.modal-background').style.display = 'none'
+            runGame(true, pianoKeys, keyBoardMapping)
+        },
+        'instructions-button' : () => {
+            instructionsModal()
+        },
+        'free-play-button' : () => {
+            document.querySelector('.modal-background').style.display = 'none'
+            runGame(false, pianoKeys, keyBoardMapping)
+        },
+        'close-instructions-button' : () => {
+            createStartGameModal()
+        },
+        'main-menu-button' : () => {
+            if(typeof gameState != 'undefined') {clearTimeout(gameState.noteAnimationTimeout)}
+            createStartGameModal()
+            document.querySelector('.modal-background').style.display = 'block'
+        }
+    }
+    let modalButtons = document.querySelectorAll('.button-click-listener')
+    modalButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation()
+            htmlButtonMapping[event.target.id]()
+        })
+    })
+}
+
+function runGame(startNoteAnimation, pianoKeys, keyBoardMapping) {
+    let gameState = {
+        'gameSpeed' : 2, // multiplier to change game speed
+        'gameSpeedIncreaseIncrement' : 0,
+        'noteScreenTravelTime' : 2000, // the time in ms for a note to travel down the screen
+        'nextNoteToAnimate' : 0, // tracks progress through song
+        'gameLoop' : 0,
+        'playNoteWithinWindow' : 400, // window in ms that the note can be played
+        'playerLives' : 5,
+        'gameStartTime' : null,
+        'songLength' : 0,
+        'noteAnimationTimeout' : null
+    }
+    const song = [
+        {
+            note: 'b5',
+            notePlayedAt: 0,
+            duration:500
+        },
+        {
+            note: 'a5',
+            notePlayedAt: 500,
+            duration:1000
+        },
+        {
+            note: 'b5',
+            notePlayedAt: 1000,
+            duration:500
+        },
+        // {
+        //     note: 'f4sharp',
+        //     notePlayedAt: 3500,
+        //     duration:500
+        // },
+        // {
+        //     note: 'd4',
+        //     notePlayedAt: 4000,
+        //     duration:500
+        // },
+        // {
+        //     note: 'f4sharp',
+        //     notePlayedAt: 4500,
+        //     duration:500
+        // },
+        // {
+        //     note: 'b4',
+        //     notePlayedAt: 5000,
+        //     duration:500
+        // },
+        // {
+        //     note: 'b5',
+        //     notePlayedAt: 6000,
+        //     duration:500
+        // },
+        // {
+        //     note: 'a5',
+        //     notePlayedAt: 6500,
+        //     duration:500
+        // },
+        // {
+        //     note: 'b5',
+        //     notePlayedAt: 7000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'f4sharp',
+        //     notePlayedAt: 7500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'd4',
+        //     notePlayedAt: 8000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'f4sharp',
+        //     notePlayedAt: 8500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'b4',
+        //     notePlayedAt: 9000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'b5',
+        //     notePlayedAt: 10000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'c4sharp',
+        //     notePlayedAt: 10500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'd4',
+        //     notePlayedAt: 11000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'c4sharp',
+        //     notePlayedAt: 11500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'd4',
+        //     notePlayedAt: 12000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'b5',
+        //     notePlayedAt: 12500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'c4sharp',
+        //     notePlayedAt: 13000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'b5',
+        //     notePlayedAt: 13500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'c4sharp',
+        //     notePlayedAt: 14000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'a5',
+        //     notePlayedAt: 14500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'b5',
+        //     notePlayedAt: 15000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'a5',
+        //     notePlayedAt: 15500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'b5',
+        //     notePlayedAt: 16000,
+        //     duration:200
+        // },
+        // {
+        //     note: 'g4',
+        //     notePlayedAt: 16500,
+        //     duration:200
+        // },
+        // {
+        //     note: 'b5',
+        //     notePlayedAt: 17000,
+        //     duration:200
+        // }
+    ]
+    let notesPlaying = {};
+    let notesToPlayArray = [] // helps the program decide what note to play next
+    let notesInChannels = {} // used to track hit markers and timing
+    let results = [] // keeps track of all notes played and hit ratio, used to track lives lost and score
+
+
     gameState.gameStartTime = new Date()
-    createNoteDivs(song)
-    populateNotesAndChannelArrays(song)
-    playSongOnLoop(song)
+    createNoteDivs(song, pianoKeys)
+    populateNotesAndChannelArrays(song, gameState, notesToPlayArray, notesInChannels)
+    if(startNoteAnimation) {playSongOnLoop(song, gameState, pianoKeys, notesToPlayArray, notesInChannels)}
 
     window.addEventListener('keydown' , (event) => {
-        let keyboardKey = handleKeyboardEvent(event, notesPlaying)
-        detectNoteHit(keyboardKey)
+        handleKeyboardEvent(event, gameState, notesPlaying, pianoKeys, keyBoardMapping, notesInChannels)
     })
     window.addEventListener('keyup' , (event) => {
-        handleKeyboardEvent(event, notesPlaying)
+        handleKeyboardEvent(event, gameState, notesPlaying, pianoKeys, keyBoardMapping, notesInChannels)
     })
 
     //on game over count how many notes
     // played, or how many notes hit - duplicate info, no because you will have lives
+    handleModalClicks(gameState)
 }
-function createNoteDivs(song) {
+function createNoteDivs(song, pianoKeys) {
     for(let i = 0; i < song.length; i++) {
         let pianoKey = pianoKeys[song[i].note]
         let channel = document.querySelector('#channel-' + song[i].note)
@@ -115,9 +280,9 @@ function createNoteDivs(song) {
         channel.innerHTML += noteDiv
     }
 }
-function populateNotesAndChannelArrays(song) {
+function populateNotesAndChannelArrays(song, gameState, notesToPlayArray, notesInChannels) {
     notesInChannels = {}
-    notesToPlayArray = []
+    notesToPlayArray.length = 0 // clears out any missed notes during gameplay
     for(let i = 0; i < song.length; i++) {
         notesToPlayArray.push(
             {
@@ -135,13 +300,13 @@ function populateNotesAndChannelArrays(song) {
             })
     }
 }
-function playSongOnLoop(song) {
+function playSongOnLoop(song, gameState, pianoKeys, notesToPlayArray, notesInChannels) {
     function loopGameSong(songLength) {
-        setTimeout(() => {
+        gameState.noteAnimationTimeout = setTimeout(() => {
             gameState.gameSpeed += gameState.gameSpeedIncreaseIncrement
-            populateNotesAndChannelArrays(song, gameState)
-            setNoteDivProperties(song, gameState)
-            animateNotes(gameState)
+            populateNotesAndChannelArrays(song, gameState, notesToPlayArray, notesInChannels)
+            setNoteDivProperties(song, gameState, pianoKeys, notesToPlayArray)
+            animateNotes(gameState, notesToPlayArray)
             let lastNote = notesToPlayArray[notesToPlayArray.length - 1]
             let songLengthTimer = (lastNote.notePlayedAt + lastNote.duration + gameState.noteScreenTravelTime) / gameState.gameSpeed
             gameState.songLength = songLengthTimer
@@ -151,7 +316,7 @@ function playSongOnLoop(song) {
     }
     loopGameSong(0)
 }
-function setNoteDivProperties(song) {
+function setNoteDivProperties(song, gameState, pianoKeys, notesToPlayArray) {
     for(let i = 0; i < song.length; i++) {
         let channel = document.querySelector('#channel-' + song[i].note)
         let screenSizeAdjustmentFactor = gameState.noteScreenTravelTime / channel.clientHeight
@@ -169,7 +334,7 @@ function setNoteDivProperties(song) {
         }
     }
 }
-function animateNotes() {
+function animateNotes(gameState, notesToPlayArray) {
     notesToPlayArray.forEach((note) => {
         setTimeout(() => {
             let divToAnimate = document.querySelector('#note-' + note.noteId)
@@ -189,16 +354,20 @@ function animateNotes() {
         }, note.notePlayedAt / gameState.gameSpeed )
     })
 }
-function handleKeyboardEvent(event, notesPlaying) {
+function handleKeyboardEvent(event, gameState, notesPlaying, pianoKeys, keyBoardMapping, notesInChannels) {
     event.preventDefault()
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let audioConnect = audioContext.createGain();
+    audioConnect.connect(audioContext.destination);
     if(Object.keys(keyBoardMapping).includes(event.code)) {
         let keyboardKey = keyBoardMapping[event.code]
         if (event.type === 'keydown') {
             let pianoKey = pianoKeys[keyboardKey.note]
             if (keyboardKey.pressed === false) {
                 keyboardKey.pressed = true
-                notesPlaying[keyboardKey.note] = playNote(pianoKey.frequency)
+                notesPlaying[keyboardKey.note] = playNote(audioContext, audioConnect, pianoKey.frequency)
                 document.querySelector('#' + keyboardKey.note).classList.add('depressedKey')
+                detectNoteHit(gameState, keyboardKey, notesInChannels)
             }
         } else if (event.type === 'keyup') {
             if (keyboardKey.pressed === true) {
@@ -210,7 +379,7 @@ function handleKeyboardEvent(event, notesPlaying) {
         return keyboardKey
     }
 }
-function playNote(frequency) {
+function playNote(audioContext, audioConnect, frequency) {
     let sound = audioContext.createOscillator()
     sound.connect(audioConnect)
     sound.type = 'sine'
@@ -218,23 +387,23 @@ function playNote(frequency) {
     sound.start()
     return sound
 }
-function detectNoteHit(keyboardKey) {
-    if(typeof notesInChannels[keyboardKey.note][0] != "undefined") {
+function detectNoteHit(gameState, keyboardKey, notesInChannels) {
+    if(typeof notesInChannels[keyboardKey.note] != "undefined") {
         let note = notesInChannels[keyboardKey.note][0]
         let noteShouldBePlayed = (note.notePlayedAt + (gameState.noteScreenTravelTime / gameState.gameSpeed)) + (gameState.songLength * (gameState.gameLoop - 1))
         let noteActuallyPlayed = new Date() - gameState.gameStartTime
 
 
-        console.log('Note should be played at: ' + noteShouldBePlayed)
-        console.log('Not actually played at: ' + noteActuallyPlayed)
+        // console.log('Note should be played at: ' + noteShouldBePlayed)
+        // console.log('Not actually played at: ' + noteActuallyPlayed)
+        //
+        // console.log('noteScreenTravelTime = ' + gameState.noteScreenTravelTime)
+        // console.log('gameSpeed = ' + gameState.gameSpeed)
+        // console.log('songLength = ' + gameState.songLength)
+        // console.log('gameLoop = ' + gameState.gameLoop)
 
-        console.log('noteScreenTravelTime = ' + gameState.noteScreenTravelTime)
-        console.log('gameSpeed = ' + gameState.gameSpeed)
-        console.log('songLength = ' + gameState.songLength)
-        console.log('gameLoop = ' + gameState.gameLoop)
-
-        document.querySelector('#note-'+note.noteId).style.backgroundColor = 'green'
-        notesInChannels[keyboardKey.note].splice(0, 1)
+        // document.querySelector('#note-'+note.noteId).style.backgroundColor = 'green'
+        // notesInChannels[keyboardKey.note].splice(0, 1)
     }
 
     // create array of the channels, put the notes to be played into each channel with the time they should be played
@@ -344,308 +513,143 @@ const pianoKeys = {
 }
 const keyBoardMapping = {
     'KeyA' : {
-            note: 'g3',
-            code: 'KeyA',
-            label: 'A',
-            pressed: false
+        note: 'g3',
+        code: 'KeyA',
+        label: 'A',
+        pressed: false
     },
     'KeyW' : {
 
-            note: 'g3sharp',
-            code: 'KeyW',
-            label: 'W',
-            pressed: false
+        note: 'g3sharp',
+        code: 'KeyW',
+        label: 'W',
+        pressed: false
 
     },
     'KeyS' : {
 
-            note: 'a4',
-            code: 'KeyS',
-            label: 'S',
-            pressed: false,
+        note: 'a4',
+        code: 'KeyS',
+        label: 'S',
+        pressed: false,
     },
     'KeyE' : {
-            note: 'a4sharp',
-            code: 'KeyE',
-            label: 'E',
-            pressed: false
+        note: 'a4sharp',
+        code: 'KeyE',
+        label: 'E',
+        pressed: false
     },
     'KeyD' : {
-            note: 'b4',
-            code: 'KeyD',
-            label: 'D',
-            pressed: false
+        note: 'b4',
+        code: 'KeyD',
+        label: 'D',
+        pressed: false
     },
     'KeyF' : {
-            note: 'c4',
-            code: 'KeyF',
-            label: 'F',
-            pressed: false
+        note: 'c4',
+        code: 'KeyF',
+        label: 'F',
+        pressed: false
     },
     'KeyT' : {
-            note: 'c4sharp',
-            code: 'KeyT',
-            label: 'T',
-            pressed: false
+        note: 'c4sharp',
+        code: 'KeyT',
+        label: 'T',
+        pressed: false
     },
     'KeyG' : {
-            note: 'd4',
-            code: 'KeyG',
-            label: 'G',
-            pressed: false
+        note: 'd4',
+        code: 'KeyG',
+        label: 'G',
+        pressed: false
     },
     'KeyY' : {
-            note: 'd4sharp',
-            code: 'KeyY',
-            label: 'Y',
-            pressed: false
+        note: 'd4sharp',
+        code: 'KeyY',
+        label: 'Y',
+        pressed: false
     },
     'KeyH' : {
-            note: 'e4',
-            code: 'KeyH',
-            label: 'H',
-            pressed: false
+        note: 'e4',
+        code: 'KeyH',
+        label: 'H',
+        pressed: false
     },
     'KeyJ' : {
-            note: 'f4',
-            code: 'KeyJ',
-            label: 'J',
-            pressed: false
+        note: 'f4',
+        code: 'KeyJ',
+        label: 'J',
+        pressed: false
     },
     'KeyI' : {
-            note: 'f4sharp',
-            code: 'KeyI',
-            label: 'I',
-            pressed: false
+        note: 'f4sharp',
+        code: 'KeyI',
+        label: 'I',
+        pressed: false
     },
     'KeyK' : {
-            note: 'g4',
-            code: 'KeyK',
-            label: 'K',
-            pressed: false,
+        note: 'g4',
+        code: 'KeyK',
+        label: 'K',
+        pressed: false,
     },
     'KeyO' : {
-            note: 'g4sharp',
-            code: 'KeyO',
-            label: 'O',
-            pressed: false
+        note: 'g4sharp',
+        code: 'KeyO',
+        label: 'O',
+        pressed: false
     },
     'KeyL' : {
-            note: 'a5',
-            code: 'KeyL',
-            label: 'L',
-            pressed: false
+        note: 'a5',
+        code: 'KeyL',
+        label: 'L',
+        pressed: false
     },
     'KeyP' : {
-            note: 'a5sharp',
-            code: 'KeyP',
-            label: 'P',
-            pressed: false
+        note: 'a5sharp',
+        code: 'KeyP',
+        label: 'P',
+        pressed: false
     },
     'Semicolon' : {
-            note: 'b5',
-            code: 'Semicolon',
-            label: ';',
-            pressed: false
+        note: 'b5',
+        code: 'Semicolon',
+        label: ';',
+        pressed: false
     },
     'Quote' : {
-            note: 'c5',
-            code: 'Quote',
-            label: "'",
-            pressed: false,
+        note: 'c5',
+        code: 'Quote',
+        label: "'",
+        pressed: false,
     },
     'BracketLeft' : {
-            note: 'c5sharp',
-            code: 'BracketLeft',
-            label: '[',
-            pressed: false,
+        note: 'c5sharp',
+        code: 'BracketLeft',
+        label: '[',
+        pressed: false,
     },
     'Backslash' : {
-            note: 'd5',
-            code: 'Backslash',
-            label: '\\',
-            pressed: false,
+        note: 'd5',
+        code: 'Backslash',
+        label: '\\',
+        pressed: false,
     },
     'BracketRight' : {
-            note: 'd5sharp',
-            code: 'BracketRight',
-            label: ']',
-            pressed: false,
+        note: 'd5sharp',
+        code: 'BracketRight',
+        label: ']',
+        pressed: false,
     },
     'Enter' : {
 
-            note: 'e5',
-            code: 'Enter',
-            label: '⏎',
-            pressed: false,
+        note: 'e5',
+        code: 'Enter',
+        label: '⏎',
+        pressed: false,
     },
 }
-const popcornSongNotes = [
-    {
-        note: 'b5',
-        notePlayedAt: 0,
-        duration:500
-    },
-    {
-        note: 'a5',
-        notePlayedAt: 500,
-        duration:1000
-    },
-    {
-        note: 'b5',
-        notePlayedAt: 1000,
-        duration:500
-    },
-    // {
-    //     note: 'f4sharp',
-    //     notePlayedAt: 3500,
-    //     duration:500
-    // },
-    // {
-    //     note: 'd4',
-    //     notePlayedAt: 4000,
-    //     duration:500
-    // },
-    // {
-    //     note: 'f4sharp',
-    //     notePlayedAt: 4500,
-    //     duration:500
-    // },
-    // {
-    //     note: 'b4',
-    //     notePlayedAt: 5000,
-    //     duration:500
-    // },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 6000,
-    //     duration:500
-    // },
-    // {
-    //     note: 'a5',
-    //     notePlayedAt: 6500,
-    //     duration:500
-    // },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 7000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'f4sharp',
-    //     notePlayedAt: 7500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'd4',
-    //     notePlayedAt: 8000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'f4sharp',
-    //     notePlayedAt: 8500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'b4',
-    //     notePlayedAt: 9000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 10000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'c4sharp',
-    //     notePlayedAt: 10500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'd4',
-    //     notePlayedAt: 11000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'c4sharp',
-    //     notePlayedAt: 11500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'd4',
-    //     notePlayedAt: 12000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 12500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'c4sharp',
-    //     notePlayedAt: 13000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 13500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'c4sharp',
-    //     notePlayedAt: 14000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'a5',
-    //     notePlayedAt: 14500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 15000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'a5',
-    //     notePlayedAt: 15500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 16000,
-    //     duration:200
-    // },
-    // {
-    //     note: 'g4',
-    //     notePlayedAt: 16500,
-    //     duration:200
-    // },
-    // {
-    //     note: 'b5',
-    //     notePlayedAt: 17000,
-    //     duration:200
-    // }
-]
 
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let audioConnect = audioContext.createGain();
-audioConnect.connect(audioContext.destination);
-let gameState = {
-    'gameSpeed' : 2, // multiplier to change game speed
-    'gameSpeedIncreaseIncrement' : 0,
-    'noteScreenTravelTime' : 2000, // the time in ms for a note to travel down the screen
-    'nextNoteToAnimate' : 0, // tracks progress through song
-    'gameLoop' : 0,
-    'playNoteWithinWindow' : 400, // window in ms that the note can be played
-    'playerLives' : 5,
-    'gameStartTime' : null,
-    'songLength' : 0
-}
-
-let results = [] // keeps track of all notes played and hit ratio, used to track lives lost and score
-let notesToPlayArray = [] // helps the program decide what note to play next
-let notesInChannels = {} // used to track hit markers and timing
-
+createGameScreen(pianoKeys, keyBoardMapping)
 createStartGameModal()
-createGameScreen()
+
