@@ -5,9 +5,10 @@
 <head>
 
     <title>Piano Plinky Plonk</title>
+    <link rel="icon" type="image/x-icon" href="musical-keyboard.ico">
     <link href="normalize.css" rel="stylesheet" type="text/css">
     <link href="styles.css" rel="stylesheet" type="text/css">
-    <script src="script.js" type="module" defer></script>
+    <script src="./src/script.js" type="module" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
